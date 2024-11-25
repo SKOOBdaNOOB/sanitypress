@@ -18,7 +18,10 @@ export default async function Code({
 
 	const html = await codeToHtml(stegaClean(value.code), {
 		lang: value.language,
-		theme: 'dark-plus',
+		themes: {
+			light: 'everforest-dark',
+			dark: 'dracula-soft',
+		},
 		decorations: value.highlightedLines
 			?.map((row) => ({
 				row,
@@ -35,10 +38,16 @@ export default async function Code({
 	})
 
 	return (
-		<article className="group relative !mb-2 !mt-6 rounded bg-ink/5">
+		<article className="group relative !mb-2 !mt-6 rounded bg-base-200">
+			<div className="absolute left-2 flex space-x-1.5 py-3">
+				<span className="h-3 w-3 rounded-full bg-red-500 opacity-50"></span>
+				<span className="h-3 w-3 rounded-full bg-yellow-500 opacity-50"></span>
+				<span className="h-3 w-3 rounded-full bg-green-500 opacity-50"></span>
+			</div>
+
 			{value.filename && (
-				<div className="-mb-1 rounded-t bg-[#1E1E1E]/90 px-2 py-1 font-mono text-xs text-canvas">
-					<span className="inline-block rounded-t border-b border-blue-400 bg-[#1E1E1E] px-3 py-2">
+				<div className="-mb-1 rounded-t bg-base-300 px-2 py-1 pl-16 font-mono text-xs text-secondary-content">
+					<span className="inline-block rounded-t border-b border-double border-accent bg-base-200 px-3 py-2">
 						📁 {value.filename}
 					</span>
 				</div>
@@ -50,8 +59,8 @@ export default async function Code({
 				<ClickToCopy
 					value={stegaClean(value.code)}
 					className={cn(
-						'anim-fade-to-l absolute right-0 top-0 m-1 hidden rounded p-[.3em] text-lg text-white',
-						'hover:bg-white/10 active:scale-95 active:bg-white/20 group-hover:block',
+						'anim-fade-to-l absolute right-0 top-0 m-2 hidden place-items-center rounded p-1 text-center text-lg text-neutral-content md:text-xl',
+						'hover:bg-neutral active:scale-95 active:bg-neutral group-hover:block',
 					)}
 				/>
 			</div>

@@ -5,6 +5,7 @@ import Img from '@/ui/Img'
 import Navigation from './Navigation'
 import CTAList from '@/ui/CTAList'
 import Toggle from './Toggle'
+import ThemeToggle from './ThemeToggle'
 import { cn } from '@/lib/utils'
 import css from './Header.module.css'
 
@@ -14,7 +15,7 @@ export default async function Header() {
 	const logoImage = logo?.image?.dark || logo?.image?.default
 
 	return (
-		<Wrapper className="frosted-glass sticky top-0 z-10 border-b border-ink/10 bg-canvas max-md:header-open:shadow-lg">
+		<Wrapper className="flex-items-center sticky top-0 z-10 border-b border-base-200/10 bg-base-300 font-semibold text-base-content max-md:header-open:shadow-lg">
 			<div
 				className={cn(
 					css.header,
@@ -22,9 +23,10 @@ export default async function Header() {
 				)}
 			>
 				<div className="[grid-area:logo]">
+					<Toggle />
 					<Link
 						className={cn(
-							'h4 md:h3 inline-block',
+							'h4 md:h3 inline-block content-center',
 							logo?.image && 'max-w-[250px]',
 						)}
 						href="/"
@@ -36,7 +38,9 @@ export default async function Header() {
 								alt={logo?.name || title}
 							/>
 						) : (
-							<span className="text-gradient">{title}</span>
+							<span className="flex-items-center btn btn-ghost px-4 text-3xl font-bold text-base-content md:text-2xl">
+								{title}
+							</span>
 						)}
 					</Link>
 				</div>
@@ -47,8 +51,7 @@ export default async function Header() {
 					ctas={ctas}
 					className="[grid-area:ctas] max-md:*:w-full max-md:header-closed:hidden md:ml-auto"
 				/>
-
-				<Toggle />
+				<ThemeToggle />
 			</div>
 		</Wrapper>
 	)

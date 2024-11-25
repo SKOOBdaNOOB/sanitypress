@@ -10,12 +10,12 @@ export default function PostPreviewLarge({ post }: { post: Sanity.BlogPost }) {
 
 	return (
 		<Link
-			className="group grid items-center gap-x-8 gap-y-4 md:grid-cols-2"
+			className="group card grid items-center gap-x-8 gap-y-4 md:grid-cols-2"
 			href={processUrl(post, { base: false })}
 		>
-			<figure className="max-md:full-bleed relative aspect-video overflow-hidden bg-ink/5 md:aspect-[1.5]">
+			<figure className="max-md:full-bleed bg-base/5 relative aspect-video overflow-hidden md:aspect-[1.5]">
 				<Img
-					className="aspect-[inherit] w-full object-cover transition-[filter,transform] group-hover:scale-105 group-hover:brightness-110"
+					className="w-full rounded-2xl object-cover transition-[filter,transform] group-hover:scale-105 group-hover:brightness-110"
 					image={post.metadata.image}
 					imageWidth={800}
 					alt={post.metadata.title}
@@ -30,7 +30,7 @@ export default function PostPreviewLarge({ post }: { post: Sanity.BlogPost }) {
 			</figure>
 
 			<div className="mx-auto max-w-lg space-y-4">
-				<h2 className="h2 md:h1 group-hover:underline">
+				<h2 className="h2 md:h1 text-accent group-hover:underline">
 					{post.metadata.title}
 				</h2>
 

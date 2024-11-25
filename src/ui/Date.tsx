@@ -7,5 +7,9 @@ export default function ({ value }: { value: string }) {
 		day: 'numeric',
 	})
 
-	return <time dateTime={value}>{formatted}</time>
+	return (
+		<time dateTime={value} className="text-sm">
+			{formatted}
+		</time>
+	)
 }

@@ -11,12 +11,12 @@ export default function Authors({
 		<dl {...props}>
 			{authors?.map((author) => (
 				<div className="flex items-center gap-[.5ch]" key={author._id}>
-					<dd className="grid aspect-square w-[1.7em] place-content-center overflow-hidden rounded-full bg-ink/5">
+					<dd className="grid aspect-square w-10 place-content-center overflow-hidden rounded-full bg-base-200">
 						{author.image ? (
 							<Img
 								className="aspect-[inherit]"
 								image={author.image}
-								imageWidth={60}
+								imageWidth={1280}
 								alt={author.name}
 							/>
 						) : (

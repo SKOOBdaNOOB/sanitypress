@@ -50,7 +50,7 @@ export default function TableOfContents({
 
 	return (
 		<details
-			className={cn(css.root, 'accordion max-lg:bg-neutral-100 max-lg:p-3')}
+			className={cn(css.root, 'accordion max-lg:bg-neutral max-lg:p-3')}
 			open
 		>
 			<summary className="font-bold">Table of Contents</summary>

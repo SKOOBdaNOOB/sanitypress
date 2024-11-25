@@ -9,7 +9,10 @@ export default function Categories({
 	if (!categories?.length) return null
 
 	return (
-		<ul {...props}>
+		<ul
+			{...props}
+			className="flex flex-wrap items-start justify-end gap-2 text-sm font-medium text-accent"
+		>
 			{categories.map((category, key) => (
 				<li key={key}>
 					<Category value={category} />

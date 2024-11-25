@@ -8,45 +8,49 @@ import Authors from './Authors'
 export default function PostPreview({ post }: { post: Sanity.BlogPost }) {
 	return (
 		<Link
-			className="group flex h-full flex-col space-y-2"
+			className="w-94 group card h-full bg-base-200 shadow-xl"
 			href={processUrl(post, { base: false })}
 		>
-			<figure className="relative aspect-video overflow-hidden bg-neutral-50">
+			{/* Card Image */}
+			<figure className="relative">
 				<Img
 					className="aspect-video w-full object-cover transition-[filter,transform] group-hover:scale-105 group-hover:brightness-110"
 					image={post.metadata.image}
 					imageWidth={700}
 					alt={post.metadata.title}
 				/>
-
-				{post.featured && (
-					<span className="action absolute right-4 top-0 rounded-t-none py-1 text-xs shadow-md">
-						Featured
-					</span>
-				)}
 			</figure>
 
-			<div className="h4 group-hover:underline">{post.metadata.title}</div>
+			<div className="card-body">
+				<h2 className="font-accent card-title text-lg font-bold text-accent hover:link">
+					{post.metadata.title}
+					{post.featured && (
+						<span className="badge badge-secondary text-secondary-content">
+							Featured
+						</span>
+					)}
+				</h2>
 
-			<div className="grow">
-				<p className="line-clamp-3 text-sm">{post.metadata.description}</p>
-			</div>
+				<p className="text-sm italic">{post.metadata.description}</p>
 
-			{post.authors?.length && (
-				<Authors
-					className="flex flex-wrap items-center gap-4 text-sm"
-					authors={post.authors}
-				/>
-			)}
+				{post.authors?.length > 0 && (
+					<div className="pt-2">
+						<Authors
+							className="flex flex-wrap items-center gap-4 text-sm font-semibold"
+							authors={post.authors}
+						/>
+					</div>
+				)}
 
-			<hr />
-
-			<div className="flex flex-wrap gap-x-4 text-sm">
-				<Date value={post.publishDate} />
-				<Categories
-					className="flex flex-wrap gap-x-2"
-					categories={post.categories}
-				/>
+				<div className="absolute bottom-2 left-4 justify-start text-base-content">
+					<Date value={post.publishDate} />
+				</div>
+				<div className="card-actions justify-end">
+					<Categories
+						className="flex flex-wrap gap-2"
+						categories={post.categories}
+					/>
+				</div>
 			</div>
 		</Link>
 	)

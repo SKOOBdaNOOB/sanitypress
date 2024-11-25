@@ -24,7 +24,7 @@
 	@keyframes target {
 		0%,
 		50% {
-			@apply bg-amber-400/50;
+			@apply bg-warning;
 		}
 	}
 
@@ -55,27 +55,27 @@
 	}
 
 	.h1 {
-		@apply _h text-4xl;
+		@apply _h text-4xl text-primary;
 	}
 
 	.h2 {
-		@apply _h text-3xl;
+		@apply _h text-3xl text-primary;
 	}
 
 	.h3 {
-		@apply _h text-2xl;
+		@apply _h text-2xl text-primary;
 	}
 
 	.h4 {
-		@apply _h text-xl;
+		@apply _h text-xl text-primary;
 	}
 
 	.h5 {
-		@apply _h text-lg;
+		@apply _h text-lg text-primary;
 	}
 
 	.h6 {
-		@apply _h;
+		@apply _h text-primary;
 	}
 
 	.technical {
@@ -89,7 +89,7 @@
 	}
 
 	.text-gradient {
-		@apply bg-gradient-to-br from-accent/5 to-accent bg-clip-text text-transparent;
+		@apply bg-gradient-to-br from-secondary to-secondary-content bg-clip-text text-transparent;
 	}
 
 	/* ctas, links */
@@ -104,15 +104,15 @@
 	}
 
 	.action {
-		@apply _btn text-balance rounded border border-transparent bg-accent text-white;
+		@apply _btn font-accent text-balance rounded border border-transparent bg-accent text-accent-content transition hover:text-accent-content;
 	}
 
 	.action-outline {
-		@apply _btn text-balance rounded border border-accent/10 bg-canvas/50 to-canvas text-accent;
+		@apply _btn font-accent text-balance rounded border border-accent bg-base-100 text-base-content transition hover:bg-accent hover:text-accent-content;
 	}
 
 	.ghost {
-		@apply _btn frosted-glass rounded hover:bg-accent/5;
+		@apply frosted-glass _btn font-accent rounded border-none bg-transparent text-base-content transition hover:bg-accent/10 hover:text-base-300;
 	}
 
 	.link {
@@ -137,34 +137,34 @@
 	/* richtext */
 
 	.richtext {
-		@apply space-y-2 leading-relaxed;
+		@apply font-body space-y-2 leading-relaxed;
 
 		& :is(h1, h2, h3, h4, h5, h6) strong {
 			@apply text-gradient;
 		}
 
 		& h1 {
-			@apply h1;
+			@apply h1 font-accent;
 		}
 
 		& h2 {
-			@apply h2;
+			@apply h2 font-accent;
 		}
 
 		& h3 {
-			@apply h3;
+			@apply h3 font-accent;
 		}
 
 		& h4 {
-			@apply h4;
+			@apply h4 font-accent;
 		}
 
 		& h5 {
-			@apply h5;
+			@apply h5 font-accent;
 		}
 
 		& h6 {
-			@apply h6;
+			@apply h6 font-accent;
 		}
 
 		& :is(ul, ol) {
@@ -181,7 +181,7 @@
 		}
 
 		& :not(pre) > code {
-			@apply rounded bg-ink/5 px-1;
+			@apply rounded bg-base-200 px-1;
 		}
 
 		& pre {
@@ -204,7 +204,7 @@
 
 			& tbody {
 				& tr:nth-child(odd) {
-					@apply bg-neutral-50;
+					@apply bg-neutral-content;
 				}
 
 				& tr th:first-child {

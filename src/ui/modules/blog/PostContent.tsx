@@ -18,23 +18,26 @@ export default function PostContent({
 
 	return (
 		<article {...moduleProps(props)}>
-			<header className="section space-y-6 text-center">
-				<h1 className="h1 text-balance">{post.metadata.title}</h1>
-				<div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-					<Date value={post.publishDate} />
+			<header className="section space-y-2 text-center">
+				<h1 className="text-gradient h1 text-balance py-2 text-4xl md:text-6xl">
+					{post.metadata.title}
+				</h1>
+				<div className="flex flex-wrap items-center justify-center">
 					<Categories
 						className="flex flex-wrap gap-x-2"
 						categories={post.categories}
 					/>
-					<ReadTime value={post.readTime} />
 				</div>
-
 				{post.authors?.length && (
 					<Authors
-						className="flex flex-wrap items-center justify-center gap-4"
+						className="flex flex-wrap items-center justify-center p-2.5 text-xl font-semibold md:text-2xl"
 						authors={post.authors}
 					/>
 				)}
+				<div className="flex flex-wrap items-center justify-center gap-x-6">
+					<Date value={post.publishDate} /> |
+					<ReadTime value={post.readTime} />
+				</div>
 			</header>
 
 			<div
@@ -44,7 +47,7 @@ export default function PostContent({
 				)}
 			>
 				{showTOC && (
-					<aside className="lg:sticky-below-header mx-auto w-full max-w-lg self-start [--offset:1rem] lg:order-1 lg:w-[250px]">
+					<aside className="lg:sticky-below-header bg-base mx-auto w-full max-w-lg self-start text-base-content [--offset:1rem] lg:order-1 lg:w-[250px]">
 						<TableOfContents headings={post.headings} />
 					</aside>
 				)}

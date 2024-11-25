@@ -24,12 +24,12 @@ export default async function Announcement() {
 	if (!active) return null
 
 	return (
-		<aside className="flex items-center justify-center gap-x-4 text-balance bg-accent p-2 text-center text-canvas max-md:text-sm md:gap-x-6">
+		<aside className="flex items-center justify-center gap-x-4 text-balance bg-accent p-2 text-center text-accent-content max-md:text-sm md:gap-x-6">
 			<div className="anim-fade-to-r [&_a]:link">
 				<PortableText value={active.content} />
 			</div>
 
-			<CTA className="link anim-fade-to-l shrink" link={active.cta} />
+			<CTA className="anim-fade-to-l link shrink" link={active.cta} />
 		</aside>
 	)
 }
