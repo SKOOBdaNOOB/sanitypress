@@ -15,7 +15,7 @@ export default function PostPreviewLarge({ post }: { post: Sanity.BlogPost }) {
 		>
 			<figure className="max-md:full-bleed bg-base/5 relative aspect-video overflow-hidden md:aspect-[1.5]">
 				<Img
-					className="w-full rounded-2xl object-cover transition-[filter,transform] group-hover:scale-105 group-hover:brightness-110"
+					className="w-full object-cover transition-[filter,transform] group-hover:scale-105 group-hover:brightness-110 md:rounded-2xl"
 					image={post.metadata.image}
 					imageWidth={800}
 					alt={post.metadata.title}
@@ -30,11 +30,11 @@ export default function PostPreviewLarge({ post }: { post: Sanity.BlogPost }) {
 			</figure>
 
 			<div className="mx-auto max-w-lg space-y-4">
-				<h2 className="h2 md:h1 text-accent group-hover:underline">
+				<h2 className="h2 md:h1 font-accent text-accent group-hover:underline">
 					{post.metadata.title}
 				</h2>
 
-				<p className="line-clamp-4 max-md:text-sm">
+				<p className="line-clamp-4 italic max-md:text-sm">
 					{post.metadata.description}
 				</p>
 

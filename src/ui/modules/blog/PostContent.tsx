@@ -34,7 +34,7 @@ export default function PostContent({
 						authors={post.authors}
 					/>
 				)}
-				<div className="flex flex-wrap items-center justify-center gap-x-6">
+				<div className="flex flex-wrap items-center justify-center gap-x-6 text-sm">
 					<Date value={post.publishDate} /> |
 					<ReadTime value={post.readTime} />
 				</div>
