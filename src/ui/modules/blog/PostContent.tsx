@@ -1,5 +1,6 @@
 import moduleProps from '@/lib/moduleProps'
 import Date from '@/ui/Date'
+import Img from '@/ui/Img'
 import Categories from './Categories'
 import Authors from './Authors'
 import ReadTime from './ReadTime'
@@ -39,7 +40,14 @@ export default function PostContent({
 					<ReadTime value={post.readTime} />
 				</div>
 			</header>
-
+			<figure className="md:max-w-3/4 relative mx-auto flex max-h-96 w-full max-w-full flex-auto justify-center">
+				<Img
+					className="aspect-video w-full object-cover transition-[filter,transform] md:w-auto"
+					image={post.metadata.image}
+					imageWidth={1280}
+					alt={post.metadata.title}
+				/>
+			</figure>
 			<div
 				className={cn(
 					'section grid gap-8',
