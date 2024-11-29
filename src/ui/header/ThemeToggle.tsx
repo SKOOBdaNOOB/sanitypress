@@ -22,7 +22,7 @@ function ThemeToggle() {
 	}
 
 	return (
-		<label className="swap swap-rotate pr-2">
+		<label className="swap swap-rotate pr-2 md:pl-24">
 			{/* this hidden checkbox controls the state */}
 			<input
 				type="checkbox"

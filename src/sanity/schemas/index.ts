@@ -41,6 +41,7 @@ import stepList from './modules/step-list'
 import tabbedContent from './modules/tabbed-content'
 import testimonialFeatured from './modules/testimonial.featured'
 import testimonialList from './modules/testimonial-list'
+import timeline from './modules/timeline'
 
 export const schemaTypes = [
 	// documents
@@ -86,4 +87,5 @@ export const schemaTypes = [
 	tabbedContent,
 	testimonialFeatured,
 	testimonialList,
+	timeline,
 ]

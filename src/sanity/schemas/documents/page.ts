@@ -42,6 +42,7 @@ export default defineType({
 				{ type: 'tabbed-content' },
 				{ type: 'testimonial-list' },
 				{ type: 'testimonial.featured' },
+				{ type: 'timeline' },
 			],
 			options: {
 				insertMenu: {
