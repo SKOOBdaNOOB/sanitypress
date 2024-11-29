@@ -7,7 +7,7 @@ const client = createClient({
 	dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
 	// token, // for private datasets
 	apiVersion: '2024-11-01',
-	useCdn: false,
+	useCdn: true,
 })
 
 export default {
