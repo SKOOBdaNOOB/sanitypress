@@ -3,6 +3,7 @@ import site from './documents/site'
 import page from './documents/page'
 import blogPost from './documents/blog.post'
 import blogCategory from './documents/blog.category'
+import githubDetails from './documents/github.details'
 import navigation from './documents/navigation'
 import announcement from './documents/announcement'
 import redirect from './documents/redirect'
@@ -49,6 +50,7 @@ export const schemaTypes = [
 	page,
 	blogPost,
 	blogCategory,
+	githubDetails,
 	navigation,
 	announcement,
 	redirect,

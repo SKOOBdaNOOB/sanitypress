@@ -1,7 +1,7 @@
 {
-	"name": "sanitypress",
+	"name": "sanitypress-forkd",
 	"version": "5.1.8",
-	"description": "A Next.js + Sanity.io Starter Template",
+	"description": "A Next.js + Sanity.io Template Modified for my Needs",
 	"author": "nuotsu <mitchell@nuotsu.dev> (https://nuotsu.dev)",
 	"license": "ISC",
 	"scripts": {

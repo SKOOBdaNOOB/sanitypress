@@ -1,7 +1,6 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
 import { FaTimeline } from 'react-icons/fa6'
 import { getBlockText } from '@/sanity/lib/utils'
-import { eventNames } from 'process'
 
 // A custom module designed utilizing the Aceternity UI Timeline component
 

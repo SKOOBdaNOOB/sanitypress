@@ -107,14 +107,3 @@ export const modulesQuery = groq`
 	_type == 'testimonial.featured' => { testimonial-> },
 	_type == 'testimonial-list' => { testimonials[]-> },
 `
-
-// _type == 'timeline' => {
-// 	title,
-// 	intro,
-// 	events[] {
-// 		event,
-// 		description,
-// 		date,
-// 		"image": image.asset->url,
-// 	}
-// },
