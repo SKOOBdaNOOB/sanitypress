@@ -102,12 +102,6 @@ declare global {
 			}
 		}>
 
-		type GitHubDetails = SanityDocument<{
-			username?: string
-			limit?: number
-			sort?: string
-		}>
-
 		// objects
 
 		type CTA = {

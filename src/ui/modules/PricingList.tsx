@@ -19,7 +19,7 @@ export default function PricingList({
 			)}
 
 			<dl
-				className="max-md:carousel max-md:full-bleed grid grid-cols-[repeat(var(--col,1),1fr)] items-stretch gap-6 max-md:px-4"
+				className="max-md:full-bleed grid grid-cols-[repeat(var(--col,1),1fr)] items-stretch gap-6 max-md:carousel max-md:px-4"
 				style={{ '--col': tiers?.length } as React.CSSProperties}
 			>
 				{tiers?.map((tier) => (
@@ -44,7 +44,7 @@ export default function PricingList({
 										</span>
 									)}
 									{tier.price.strikethrough && (
-										<s className="font-bold decoration-red-500">
+										<s className="font-bold decoration-accent">
 											{formatPrice(tier.price?.strikethrough)}
 										</s>
 									)}

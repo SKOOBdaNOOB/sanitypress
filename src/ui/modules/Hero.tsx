@@ -29,7 +29,7 @@ export default function Hero({
 		<section
 			className={cn(
 				hasImage &&
-					'grid overflow-hidden bg-ink text-canvas *:col-span-full *:row-span-full',
+					'bg-base grid overflow-hidden text-base-content *:col-span-full *:row-span-full',
 			)}
 		>
 			{hasImage && (
@@ -63,7 +63,7 @@ export default function Hero({
 						)}
 						style={{ textAlign: stegaClean(textAlign) }}
 					>
-						<Pretitle className={cn(hasImage && 'text-canvas/70')}>
+						<Pretitle className={cn(hasImage && 'text-accent')}>
 							{pretitle}
 						</Pretitle>
 
@@ -76,7 +76,7 @@ export default function Hero({
 										<Reputation
 											className={cn(
 												'!mt-4',
-												hasImage && '[&_strong]:text-amber-400',
+												hasImage && '[&_strong]:text-secondary',
 												{
 													'justify-start': stegaClean(textAlign) === 'left',
 													'justify-center': stegaClean(textAlign) === 'center',
