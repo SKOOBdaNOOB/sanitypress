@@ -5,6 +5,7 @@ import BlogPostContent from './blog/PostContent'
 import Breadcrumbs from './Breadcrumbs'
 import Callout from './Callout'
 import CardList from './CardList'
+import CertList from './CertList'
 import CreativeModule from './CreativeModule'
 import CustomHTML from './CustomHTML'
 import FlagList from './FlagList'
@@ -54,6 +55,8 @@ export default function Modules({
 						return <Callout {...module} key={module._key} />
 					case 'card-list':
 						return <CardList {...module} key={module._key} />
+					case 'cert-list':
+						return <CertList {...module} key={module._key} />
 					case 'creative-module':
 						return <CreativeModule {...module} key={module._key} />
 					case 'custom-html':

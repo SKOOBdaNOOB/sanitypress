@@ -28,6 +28,7 @@ export default defineType({
 				{ type: 'breadcrumbs' },
 				{ type: 'callout' },
 				{ type: 'card-list' },
+				{ type: 'cert-list' },
 				{ type: 'creative-module' },
 				{ type: 'custom-html' },
 				{ type: 'flag-list' },
