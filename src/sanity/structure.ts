@@ -1,7 +1,6 @@
 import { structureTool } from 'sanity/structure'
 import { group, singleton } from './lib/utils'
 import { VscMultipleWindows, VscServerProcess } from 'react-icons/vsc'
-import { FaGithub } from 'react-icons/fa6'
 import { BsDatabaseAdd } from 'react-icons/bs'
 
 export const structure = structureTool({
@@ -28,11 +27,6 @@ export const structure = structureTool({
 					S.documentTypeListItem('person').title('People'),
 					S.documentTypeListItem('pricing').title('Pricing tiers'),
 					S.documentTypeListItem('reputation'),
-					// S.listItem().title('GitHub Profile').icon(FaGithub).child(
-					// 	S.document()
-					// 		.schemaType('github.details')
-					// 		.documentId('githubDetails'), // Force a single document with a specific ID
-					// ),
 					S.documentTypeListItem('testimonial').title('Testimonials'),
 				]).icon(BsDatabaseAdd),
 			]),
