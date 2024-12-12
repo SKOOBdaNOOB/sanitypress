@@ -17,7 +17,7 @@ type CertificationsListProps = {
 	categories?: {
 		category: string
 		certs: {
-			image: string
+			image: any
 			name: string
 			link?: string
 		}[]
@@ -109,16 +109,22 @@ export default function CertList({
 									</AnimatePresence>
 
 									{/* Certification Badge Image */}
-									<a href={cert.link} target="_blank" rel="noopener noreferrer">
-										<Img
-											height={100}
-											width={100}
-											image={cert.image}
-											alt={cert.name}
-											className="h-16 w-16 flex-auto justify-center rounded-full transition-transform duration-500 group-hover:z-30 group-hover:scale-105"
-											onMouseMove={handleMouseMove}
-										/>
-									</a>
+									{cert.image && (
+										<a
+											href={cert.link}
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											<Img
+												height={100}
+												width={100}
+												image={cert.image}
+												alt={cert.name}
+												className="h-16 w-16 flex-auto justify-center rounded-full transition-transform duration-500 group-hover:z-30 group-hover:scale-105"
+												onMouseMove={handleMouseMove}
+											/>
+										</a>
+									)}
 								</div>
 							))}
 						</div>
