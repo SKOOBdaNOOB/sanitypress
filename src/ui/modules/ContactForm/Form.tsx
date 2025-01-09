@@ -29,28 +29,6 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 	const [isWidgetReady, setIsWidgetReady] = useState(false)
 	const turnstileRef = useRef<TurnstileInstance | null>(null)
 
-	async function validateToken(token: string): Promise<boolean> {
-		try {
-			const response = await fetch('/api/contact/validate', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ token }),
-			})
-
-			if (!response.ok) {
-				throw new Error('Token validation failed')
-			}
-
-			const data = await response.json()
-			return data.valid
-		} catch (error) {
-			console.error('Token validation error:', error)
-			return false
-		}
-	}
-
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 		setIsSubmitting(true)
@@ -59,16 +37,6 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 		if (!token) {
 			setError('Please complete the CAPTCHA verification')
 			setIsSubmitting(false)
-			return
-		}
-
-		// Immediately validate the token
-		const isValid = await validateToken(token)
-		if (!isValid) {
-			setError('CAPTCHA verification failed. Please try again.')
-			setIsSubmitting(false)
-			turnstileRef.current?.reset()
-			setToken(null)
 			return
 		}
 
@@ -92,15 +60,24 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 			})
 
 			if (!res.ok) {
-				throw new Error('Failed to send message')
+				const errorData = await res.json()
+				throw new Error(errorData.error || 'Failed to send message')
 			}
 
 			setIsSuccess(true)
 			e.currentTarget.reset()
+			turnstileRef.current?.reset()
+			setToken(null)
 		} catch (err) {
-			setError(
-				'Sorry, there was an error sending your message. Please try again.',
-			)
+			if (err instanceof Error) {
+				setError(err.message)
+			} else {
+				setError(
+					'Sorry, there was an error sending your message. Please try again.',
+				)
+			}
+			turnstileRef.current?.reset()
+			setToken(null)
 		} finally {
 			setIsSubmitting(false)
 		}
