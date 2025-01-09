@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { Turnstile } from '@marsidev/react-turnstile'
 
 interface FormProps {
@@ -20,7 +20,6 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 	const [isSuccess, setIsSuccess] = useState(false)
 	const [error, setError] = useState('')
 	const [token, setToken] = useState<string | null>(null)
-	const { resolvedTheme } = useTheme()
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
