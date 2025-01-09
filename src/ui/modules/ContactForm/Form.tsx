@@ -19,27 +19,16 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isSuccess, setIsSuccess] = useState(false)
 	const [error, setError] = useState('')
-	const turnstileRef = useRef<any>(null)
+	const [token, setToken] = useState<string | null>(null)
+	const { resolvedTheme } = useTheme()
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 		setIsSubmitting(true)
 		setError('')
 
-		// Reset Turnstile widget
-		turnstileRef.current?.reset()
-
-		// Get new token
-		const token = await turnstileRef.current?.getToken()
 		if (!token) {
 			setError('Please complete the CAPTCHA verification')
-			setIsSubmitting(false)
-			return
-		}
-
-		// Verify token exists
-		if (!token || typeof token !== 'string') {
-			setError('Invalid CAPTCHA token')
 			setIsSubmitting(false)
 			return
 		}
@@ -163,18 +152,24 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 			<div className="justify-items-center space-y-4 py-4">
 				<div className="flex justify-center">
 					<Turnstile
-						as="aside"
-						ref={turnstileRef}
 						siteKey={process.env.NEXT_PUBLIC_CF_TURNSTILE_SITE_KEY || ''}
 						options={{
 							theme: 'light',
-							responseField: false,
-							responseFieldName: 'cf-turnstile-response',
 							size: 'normal',
-							retry: 'auto',
-							retryInterval: 3000,
-							refreshExpired: 'auto',
 							appearance: 'always',
+						}}
+						onSuccess={(token) => {
+							setToken(token)
+							setError('')
+						}}
+						onError={(error) => {
+							console.error('Turnstile error:', error)
+							setError('CAPTCHA verification failed. Please try again.')
+							setToken(null)
+						}}
+						onExpire={() => {
+							console.log('Turnstile token expired')
+							setToken(null)
 						}}
 					/>
 				</div>
