@@ -20,6 +20,7 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 	const [isSuccess, setIsSuccess] = useState(false)
 	const [error, setError] = useState('')
 	const [token, setToken] = useState<string | null>(null)
+	const [isWidgetReady, setIsWidgetReady] = useState(false)
 	const turnstileRef = useRef<TurnstileInstance | null>(null)
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -159,6 +160,10 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 							size: 'normal',
 							appearance: 'always',
 						}}
+						onLoad={() => {
+							setIsWidgetReady(true)
+							setError('')
+						}}
 						onSuccess={(token) => {
 							setToken(token)
 							setError('')
@@ -179,10 +184,14 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 
 				<button
 					type="submit"
-					disabled={isSubmitting}
+					disabled={isSubmitting || !isWidgetReady || !token}
 					className="w-full rounded-lg bg-accent px-6 py-3 text-white transition-colors hover:bg-accent-hover disabled:opacity-50 dark:bg-accent-dark dark:hover:bg-accent-dark-hover"
 				>
-					{isSubmitting ? 'Sending...' : fields.submitLabel}
+					{!isWidgetReady
+						? 'Loading CAPTCHA...'
+						: isSubmitting
+							? 'Sending...'
+							: fields.submitLabel}
 				</button>
 			</div>
 		</form>
