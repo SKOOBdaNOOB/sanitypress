@@ -1,9 +1,26 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import type { NextRequest } from 'next/server'
+
+// Set CORS headers
+const corsHeaders = {
+	'Access-Control-Allow-Origin': '*',
+	'Access-Control-Allow-Methods': 'POST, OPTIONS',
+	'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+}
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+	// Handle OPTIONS request for CORS preflight
+	if (request.method === 'OPTIONS') {
+		return new NextResponse(null, {
+			headers: corsHeaders,
+		})
+	}
+
+	// Add CORS headers to response
+	const responseHeaders = new Headers(corsHeaders)
 	try {
 		console.log('Received contact form submission')
 		const { name, email, subject, message, emailTo, token } =
@@ -14,7 +31,7 @@ export async function POST(request: Request) {
 			console.log('Missing required fields')
 			return NextResponse.json(
 				{ error: 'Missing required fields' },
-				{ status: 400 },
+				{ status: 400, headers: responseHeaders },
 			)
 		}
 
@@ -37,7 +54,10 @@ export async function POST(request: Request) {
 		const verificationResult = await verificationResponse.json()
 		if (!verificationResult.success) {
 			console.log('Invalid CAPTCHA response:', verificationResult)
-			return NextResponse.json({ error: 'Invalid CAPTCHA' }, { status: 400 })
+			return NextResponse.json(
+				{ error: 'Invalid CAPTCHA' },
+				{ status: 400, headers: responseHeaders },
+			)
 		}
 
 		console.log('Sending email via Resend')
@@ -60,13 +80,13 @@ ${message}
 		console.log('Email sent successfully:', emailResponse)
 		return NextResponse.json(
 			{ message: 'Email sent successfully' },
-			{ status: 200 },
+			{ status: 200, headers: responseHeaders },
 		)
 	} catch (error) {
 		console.error('Error in contact form submission:', error)
 		return NextResponse.json(
 			{ error: 'Error sending message' },
-			{ status: 500 },
+			{ status: 500, headers: responseHeaders },
 		)
 	}
 }
