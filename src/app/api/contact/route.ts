@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import type { NextRequest } from 'next/server'
-import { validateToken } from '@/lib/turnstile'
 
 // Set CORS headers
 const corsHeaders = {
@@ -12,30 +11,41 @@ const corsHeaders = {
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+async function validateTurnstileToken(token: string): Promise<boolean> {
+	if (!process.env.CF_TURNSTILE_SECRET_KEY) {
+		console.error('Missing Turnstile secret key')
+		return false
+	}
+
+	try {
+		const verificationResponse = await fetch(
+			'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					secret: process.env.CF_TURNSTILE_SECRET_KEY,
+					response: token,
+				}),
+			},
+		)
+
+		const verificationResult = await verificationResponse.json()
+		return verificationResult.success === true
+	} catch (error) {
+		console.error('Turnstile verification error:', error)
+		return false
+	}
+}
+
 export async function POST(request: NextRequest) {
 	// Handle OPTIONS request for CORS preflight
 	if (request.method === 'OPTIONS') {
 		return new NextResponse(null, {
 			headers: corsHeaders,
 		})
-	}
-
-	// Handle token validation requests
-	if (
-		request.method === 'POST' &&
-		request.nextUrl.searchParams.get('validate')
-	) {
-		const { token } = await request.json()
-
-		if (!token) {
-			return NextResponse.json({ valid: false }, { status: 400 })
-		}
-
-		const isValid = await validateToken(token)
-		return NextResponse.json(
-			{ valid: isValid },
-			{ status: isValid ? 200 : 400 },
-		)
 	}
 
 	// Add CORS headers to response
@@ -55,45 +65,12 @@ export async function POST(request: NextRequest) {
 		}
 
 		console.log('Validating Turnstile token')
-		console.log('Using secret key:', process.env.CF_TURNSTILE_SECRET_KEY)
-		// Verify Turnstile token
-		if (!process.env.CF_TURNSTILE_SECRET_KEY) {
-			console.error('Missing Turnstile secret key')
-			console.error('Environment variables:', process.env)
+		const isValid = await validateTurnstileToken(token)
+		if (!isValid) {
+			console.log('Invalid CAPTCHA response')
 			return NextResponse.json(
-				{ error: 'Server configuration error' },
-				{ status: 500, headers: responseHeaders },
-			)
-		}
-
-		try {
-			const verificationResponse = await fetch(
-				'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						secret: process.env.CF_TURNSTILE_SECRET_KEY,
-						response: token,
-					}),
-				},
-			)
-
-			const verificationResult = await verificationResponse.json()
-			if (!verificationResult.success) {
-				console.log('Invalid CAPTCHA response:', verificationResult)
-				return NextResponse.json(
-					{ error: 'Invalid CAPTCHA. Please try again.' },
-					{ status: 400, headers: responseHeaders },
-				)
-			}
-		} catch (error) {
-			console.error('Turnstile verification error:', error)
-			return NextResponse.json(
-				{ error: 'CAPTCHA verification failed. Please try again.' },
-				{ status: 500, headers: responseHeaders },
+				{ error: 'Invalid CAPTCHA. Please try again.' },
+				{ status: 400, headers: responseHeaders },
 			)
 		}
 

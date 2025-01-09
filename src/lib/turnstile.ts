@@ -1,5 +1,6 @@
 export async function validateToken(token: string): Promise<boolean> {
 	if (!process.env.CF_TURNSTILE_SECRET_KEY) {
+		console.error('Missing Turnstile secret key')
 		return false
 	}
 
@@ -19,9 +20,9 @@ export async function validateToken(token: string): Promise<boolean> {
 		)
 
 		const verificationResult = await verificationResponse.json()
-		return verificationResult.success
+		return verificationResult.success === true
 	} catch (error) {
-		console.error('Token validation error:', error)
+		console.error('Turnstile verification error:', error)
 		return false
 	}
 }
