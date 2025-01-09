@@ -169,11 +169,26 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 									appearance: 'interaction-only',
 									retry: 'auto',
 									retryInterval: 5000,
+									responseField: false,
 								}}
 								onLoad={() => {
+									// Set timeout for widget loading
+									const timeout = setTimeout(() => {
+										if (!isWidgetReady) {
+											console.error('Turnstile widget failed to load')
+											setError(
+												'CAPTCHA service unavailable. Please refresh the page.',
+											)
+											setIsWidgetReady(false)
+											turnstileRef.current?.reset()
+										}
+									}, 10000) // 10 second timeout
+
 									setIsWidgetReady(true)
 									setError('')
 									console.log('Turnstile widget loaded')
+
+									return () => clearTimeout(timeout)
 								}}
 								onSuccess={(token) => {
 									if (!token) {
@@ -214,17 +229,40 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 					)}
 				</div>
 
-				<button
-					type="submit"
-					disabled={isSubmitting || !isWidgetReady || !token}
-					className="w-full rounded-lg bg-accent px-6 py-3 text-white transition-colors hover:bg-accent-hover disabled:opacity-50 dark:bg-accent-dark dark:hover:bg-accent-dark-hover"
-				>
-					{!isWidgetReady
-						? 'Loading CAPTCHA...'
-						: isSubmitting
-							? 'Sending...'
-							: fields.submitLabel}
-				</button>
+				<div className="space-y-4">
+					<button
+						type="submit"
+						disabled={isSubmitting || !isWidgetReady || !token}
+						className="w-full rounded-lg bg-accent px-6 py-3 text-white transition-colors hover:bg-accent-hover disabled:opacity-50 dark:bg-accent-dark dark:hover:bg-accent-dark-hover"
+					>
+						{isSubmitting ? 'Sending...' : fields.submitLabel}
+					</button>
+
+					{!isWidgetReady && (
+						<div className="flex items-center justify-center gap-4">
+							<button
+								type="button"
+								onClick={() => {
+									turnstileRef.current?.reset()
+									setIsWidgetReady(false)
+								}}
+								className="text-sm text-ink/50 underline hover:text-accent dark:text-ink-dark/50 dark:hover:text-accent-dark"
+							>
+								Reload CAPTCHA
+							</button>
+							<span className="text-sm text-ink/50 dark:text-ink-dark/50">
+								•
+							</span>
+							<button
+								type="button"
+								onClick={() => window.location.reload()}
+								className="text-sm text-ink/50 underline hover:text-accent dark:text-ink-dark/50 dark:hover:text-accent-dark"
+							>
+								Refresh Page
+							</button>
+						</div>
+					)}
+				</div>
 			</div>
 		</form>
 	)
