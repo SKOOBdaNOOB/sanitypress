@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile'
 
 interface FormProps {
@@ -16,6 +16,12 @@ interface FormProps {
 }
 
 export default function Form({ emailTo, successMessage, fields }: FormProps) {
+	useEffect(() => {
+		console.log(
+			'Turnstile siteKey:',
+			process.env.NEXT_PUBLIC_CF_TURNSTILE_SITE_KEY,
+		)
+	}, [])
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isSuccess, setIsSuccess] = useState(false)
 	const [error, setError] = useState('')
@@ -152,34 +158,40 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 
 			<div className="justify-items-center space-y-4 py-4">
 				<div className="flex justify-center">
-					<Turnstile
-						ref={turnstileRef}
-						siteKey={process.env.NEXT_PUBLIC_CF_TURNSTILE_SITE_KEY || ''}
-						options={{
-							theme: 'light',
-							size: 'normal',
-							appearance: 'always',
-						}}
-						onLoad={() => {
-							setIsWidgetReady(true)
-							setError('')
-						}}
-						onSuccess={(token) => {
-							setToken(token)
-							setError('')
-						}}
-						onError={(error) => {
-							console.error('Turnstile error:', error)
-							setError('CAPTCHA verification failed. Please try again.')
-							setToken(null)
-							turnstileRef.current?.reset()
-						}}
-						onExpire={() => {
-							console.log('Turnstile token expired')
-							setToken(null)
-							turnstileRef.current?.reset()
-						}}
-					/>
+					{process.env.NEXT_PUBLIC_CF_TURNSTILE_SITE_KEY && (
+						<div className="h-[65px] w-[300px]">
+							<Turnstile
+								ref={turnstileRef}
+								siteKey={process.env.NEXT_PUBLIC_CF_TURNSTILE_SITE_KEY}
+								options={{
+									theme: 'light',
+									size: 'normal',
+									appearance: 'always',
+								}}
+								onLoad={() => {
+									setIsWidgetReady(true)
+									setError('')
+								}}
+								onSuccess={(token) => {
+									setToken(token)
+									setError('')
+								}}
+								onError={(error) => {
+									console.error('Turnstile error:', error)
+									setError('CAPTCHA verification failed. Please try again.')
+									setToken(null)
+									setTimeout(() => {
+										turnstileRef.current?.reset()
+									}, 1000)
+								}}
+								onExpire={() => {
+									console.log('Turnstile token expired')
+									setToken(null)
+									turnstileRef.current?.reset()
+								}}
+							/>
+						</div>
+					)}
 				</div>
 
 				<button

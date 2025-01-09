@@ -36,9 +36,11 @@ export async function POST(request: NextRequest) {
 		}
 
 		console.log('Validating Turnstile token')
+		console.log('Using secret key:', process.env.CF_TURNSTILE_SECRET_KEY)
 		// Verify Turnstile token
 		if (!process.env.CF_TURNSTILE_SECRET_KEY) {
 			console.error('Missing Turnstile secret key')
+			console.error('Environment variables:', process.env)
 			return NextResponse.json(
 				{ error: 'Server configuration error' },
 				{ status: 500, headers: responseHeaders },
