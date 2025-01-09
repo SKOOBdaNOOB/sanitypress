@@ -26,9 +26,20 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 		setIsSubmitting(true)
 		setError('')
 
+		// Reset Turnstile widget
+		turnstileRef.current?.reset()
+
+		// Get new token
 		const token = await turnstileRef.current?.getToken()
 		if (!token) {
 			setError('Please complete the CAPTCHA verification')
+			setIsSubmitting(false)
+			return
+		}
+
+		// Verify token exists
+		if (!token || typeof token !== 'string') {
+			setError('Invalid CAPTCHA token')
 			setIsSubmitting(false)
 			return
 		}
@@ -157,6 +168,13 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 						siteKey={process.env.NEXT_PUBLIC_CF_TURNSTILE_SITE_KEY || ''}
 						options={{
 							theme: 'light',
+							responseField: false,
+							responseFieldName: 'cf-turnstile-response',
+							size: 'normal',
+							retry: 'auto',
+							retryInterval: 3000,
+							refreshExpired: 'auto',
+							appearance: 'always',
 						}}
 					/>
 				</div>
