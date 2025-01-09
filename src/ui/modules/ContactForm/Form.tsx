@@ -175,11 +175,7 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 								options={{
 									theme: 'light',
 									size: 'normal',
-<<<<<<< HEAD
-									appearance: 'always',
-=======
 									appearance: 'execute',
->>>>>>> feature/contact-form-module
 									retry: 'auto',
 									retryInterval: 5000,
 									responseField: false,
