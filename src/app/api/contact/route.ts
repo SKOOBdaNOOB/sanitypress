@@ -5,17 +5,20 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: Request) {
 	try {
+		console.log('Received contact form submission')
 		const { name, email, subject, message, emailTo, token } =
 			await request.json()
 
 		// Basic validation
 		if (!name || !email || !subject || !message || !emailTo || !token) {
+			console.log('Missing required fields')
 			return NextResponse.json(
 				{ error: 'Missing required fields' },
 				{ status: 400 },
 			)
 		}
 
+		console.log('Validating Turnstile token')
 		// Verify Turnstile token
 		const verificationResponse = await fetch(
 			'https://challenges.cloudflare.com/turnstile/v0/siteverify',
@@ -33,11 +36,13 @@ export async function POST(request: Request) {
 
 		const verificationResult = await verificationResponse.json()
 		if (!verificationResult.success) {
+			console.log('Invalid CAPTCHA response:', verificationResult)
 			return NextResponse.json({ error: 'Invalid CAPTCHA' }, { status: 400 })
 		}
 
+		console.log('Sending email via Resend')
 		// Send email using Resend
-		await resend.emails.send({
+		const emailResponse = await resend.emails.send({
 			from: 'Contact Form <contact@resend.dev>',
 			to: emailTo,
 			subject: `New Contact Form Submission: ${subject}`,
@@ -52,12 +57,13 @@ ${message}
 			replyTo: email,
 		})
 
+		console.log('Email sent successfully:', emailResponse)
 		return NextResponse.json(
 			{ message: 'Email sent successfully' },
 			{ status: 200 },
 		)
 	} catch (error) {
-		console.error('Error sending email:', error)
+		console.error('Error in contact form submission:', error)
 		return NextResponse.json(
 			{ error: 'Error sending message' },
 			{ status: 500 },
