@@ -50,6 +50,7 @@ export default defineType({
 				{ type: 'tabbed-content' },
 				{ type: 'testimonial-list' },
 				{ type: 'testimonial.featured' },
+				{ type: 'contactForm' },
 			],
 			options: {
 				insertMenu: {
@@ -80,6 +81,10 @@ export default defineType({
 						{
 							name: 'testimonials',
 							of: ['testimonial-list', 'testimonial.featured'],
+						},
+						{
+							name: 'forms',
+							of: ['contactForm'],
 						},
 					],
 				},

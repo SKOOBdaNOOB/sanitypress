@@ -21,6 +21,7 @@ import StepList from './StepList'
 import TabbedContent from './TabbedContent'
 import TestimonialList from './TestimonialList'
 import TestimonialFeatured from './TestimonialFeatured'
+import ContactForm from './ContactForm'
 
 export default function Modules({
 	modules,
@@ -87,7 +88,22 @@ export default function Modules({
 						return <TestimonialList {...module} key={module._key} />
 					case 'testimonial.featured':
 						return <TestimonialFeatured {...module} key={module._key} />
-
+					case 'contactForm':
+						return (
+							<ContactForm
+								emailTo={''}
+								successMessage={''}
+								fields={{
+									nameLabel: '',
+									emailLabel: '',
+									subjectLabel: '',
+									messageLabel: '',
+									submitLabel: '',
+								}}
+								{...module}
+								key={module._key}
+							/>
+						)
 					default:
 						return <div data-type={module._type} key={module._key} />
 				}

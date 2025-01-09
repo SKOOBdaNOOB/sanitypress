@@ -147,6 +147,20 @@ declare global {
 			_key: string
 			uid?: string
 		}
+
+		interface ContactFormModule extends Module<'contactForm'> {
+			title?: string
+			description?: any[]
+			emailTo: string
+			successMessage: string
+			fields: {
+				nameLabel: string
+				emailLabel: string
+				subjectLabel: string
+				messageLabel: string
+				submitLabel: string
+			}
+		}
 	}
 }
 
