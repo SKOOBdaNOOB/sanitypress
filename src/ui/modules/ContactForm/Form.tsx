@@ -29,13 +29,26 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 	const [isWidgetReady, setIsWidgetReady] = useState(false)
 	const turnstileRef = useRef<TurnstileInstance | null>(null)
 
+	const [tokenTimestamp, setTokenTimestamp] = useState<number | null>(null)
+
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 		setIsSubmitting(true)
 		setError('')
 
-		if (!token) {
+		if (!token || !tokenTimestamp) {
 			setError('Please complete the CAPTCHA verification')
+			setIsSubmitting(false)
+			return
+		}
+
+		// Check if token is expired (5 minutes validity)
+		const currentTime = Date.now()
+		if (currentTime - tokenTimestamp > 5 * 60 * 1000) {
+			setError('CAPTCHA verification expired. Please verify again.')
+			setToken(null)
+			setTokenTimestamp(null)
+			turnstileRef.current?.reset()
 			setIsSubmitting(false)
 			return
 		}
@@ -165,7 +178,7 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 				</div>
 			)}
 
-			<div className="justify-items-center space-y-4 py-4">
+			<div className="justify-items-center py-4">
 				<div className="flex justify-center">
 					{process.env.NEXT_PUBLIC_CF_TURNSTILE_SITE_KEY && (
 						<div className="h-[65px] w-[300px]">
@@ -181,23 +194,9 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 									responseField: false,
 								}}
 								onLoad={() => {
-									// Set timeout for widget loading
-									const timeout = setTimeout(() => {
-										if (!isWidgetReady) {
-											console.error('Turnstile widget failed to load')
-											setError(
-												'CAPTCHA service unavailable. Please refresh the page.',
-											)
-											setIsWidgetReady(false)
-											turnstileRef.current?.reset()
-										}
-									}, 10000) // 10 second timeout
-
 									setIsWidgetReady(true)
 									setError('')
 									console.log('Turnstile widget loaded')
-
-									return () => clearTimeout(timeout)
 								}}
 								onSuccess={(token) => {
 									if (!token) {
@@ -205,6 +204,7 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 										return
 									}
 									setToken(token)
+									setTokenTimestamp(Date.now())
 									setError('')
 									console.log('Turnstile verification successful')
 								}}
@@ -238,40 +238,13 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 					)}
 				</div>
 
-				<div className="space-y-4">
-					<button
-						type="submit"
-						disabled={isSubmitting || !isWidgetReady || !token}
-						className="w-full rounded-lg bg-accent px-6 py-3 text-white transition-colors hover:bg-accent-hover disabled:opacity-50 dark:bg-accent-dark dark:hover:bg-accent-dark-hover"
-					>
-						{isSubmitting ? 'Sending...' : fields.submitLabel}
-					</button>
-
-					{!isWidgetReady && (
-						<div className="flex items-center justify-center gap-4">
-							<button
-								type="button"
-								onClick={() => {
-									turnstileRef.current?.reset()
-									setIsWidgetReady(false)
-								}}
-								className="text-sm text-ink/50 underline hover:text-accent dark:text-ink-dark/50 dark:hover:text-accent-dark"
-							>
-								Reload CAPTCHA
-							</button>
-							<span className="text-sm text-ink/50 dark:text-ink-dark/50">
-								•
-							</span>
-							<button
-								type="button"
-								onClick={() => window.location.reload()}
-								className="text-sm text-ink/50 underline hover:text-accent dark:text-ink-dark/50 dark:hover:text-accent-dark"
-							>
-								Refresh Page
-							</button>
-						</div>
-					)}
-				</div>
+				<button
+					type="submit"
+					disabled={isSubmitting}
+					className="w-full rounded-lg bg-accent px-6 py-3 text-white transition-colors hover:bg-accent-hover disabled:opacity-50 dark:bg-accent-dark dark:hover:bg-accent-dark-hover"
+				>
+					{isSubmitting ? 'Sending...' : fields.submitLabel}
+				</button>
 			</div>
 		</form>
 	)
