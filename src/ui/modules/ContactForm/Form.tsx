@@ -166,28 +166,48 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 								options={{
 									theme: 'light',
 									size: 'normal',
-									appearance: 'always',
+									appearance: 'interaction-only',
+									retry: 'auto',
+									retryInterval: 5000,
 								}}
 								onLoad={() => {
 									setIsWidgetReady(true)
 									setError('')
+									console.log('Turnstile widget loaded')
 								}}
 								onSuccess={(token) => {
+									if (!token) {
+										setError('CAPTCHA verification failed. Please try again.')
+										return
+									}
 									setToken(token)
 									setError('')
+									console.log('Turnstile verification successful')
 								}}
 								onError={(error) => {
 									console.error('Turnstile error:', error)
 									setError('CAPTCHA verification failed. Please try again.')
 									setToken(null)
+									setIsWidgetReady(false)
 									setTimeout(() => {
 										turnstileRef.current?.reset()
+										setIsWidgetReady(true)
 									}, 1000)
 								}}
 								onExpire={() => {
 									console.log('Turnstile token expired')
 									setToken(null)
+									setIsWidgetReady(false)
 									turnstileRef.current?.reset()
+									setIsWidgetReady(true)
+								}}
+								onBeforeInteractive={() => {
+									console.log('Turnstile interactive challenge starting')
+									setIsWidgetReady(false)
+								}}
+								onAfterInteractive={() => {
+									console.log('Turnstile interactive challenge completed')
+									setIsWidgetReady(true)
 								}}
 							/>
 						</div>
