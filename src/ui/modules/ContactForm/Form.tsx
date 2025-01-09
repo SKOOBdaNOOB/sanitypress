@@ -16,12 +16,7 @@ interface FormProps {
 }
 
 export default function Form({ emailTo, successMessage, fields }: FormProps) {
-	useEffect(() => {
-		console.log(
-			'Turnstile siteKey:',
-			process.env.NEXT_PUBLIC_CF_TURNSTILE_SITE_KEY,
-		)
-	}, [])
+	useEffect(() => {}, [])
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isSuccess, setIsSuccess] = useState(false)
 	const [error, setError] = useState('')
@@ -196,7 +191,6 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 								onLoad={() => {
 									setIsWidgetReady(true)
 									setError('')
-									console.log('Turnstile widget loaded')
 								}}
 								onSuccess={(token) => {
 									if (!token) {
@@ -206,7 +200,6 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 									setToken(token)
 									setTokenTimestamp(Date.now())
 									setError('')
-									console.log('Turnstile verification successful')
 								}}
 								onError={(error) => {
 									console.error('Turnstile error:', error)
@@ -219,18 +212,15 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 									}, 1000)
 								}}
 								onExpire={() => {
-									console.log('Turnstile token expired')
 									setToken(null)
 									setIsWidgetReady(false)
 									turnstileRef.current?.reset()
 									setIsWidgetReady(true)
 								}}
 								onBeforeInteractive={() => {
-									console.log('Turnstile interactive challenge starting')
 									setIsWidgetReady(false)
 								}}
 								onAfterInteractive={() => {
-									console.log('Turnstile interactive challenge completed')
 									setIsWidgetReady(true)
 								}}
 							/>
@@ -241,7 +231,7 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 				<button
 					type="submit"
 					disabled={isSubmitting}
-					className="w-full rounded-lg bg-accent px-6 py-3 text-white transition-colors hover:bg-accent-hover disabled:opacity-50 dark:bg-accent-dark dark:hover:bg-accent-dark-hover"
+					className="mt-4 w-full rounded-lg bg-accent px-6 py-3 text-white transition-colors hover:bg-accent-hover disabled:opacity-50 dark:bg-accent-dark dark:hover:bg-accent-dark-hover"
 				>
 					{isSubmitting ? 'Sending...' : fields.submitLabel}
 				</button>
