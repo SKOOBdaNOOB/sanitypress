@@ -29,6 +29,28 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 	const [isWidgetReady, setIsWidgetReady] = useState(false)
 	const turnstileRef = useRef<TurnstileInstance | null>(null)
 
+	async function validateToken(token: string): Promise<boolean> {
+		try {
+			const response = await fetch('/api/contact/validate', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ token }),
+			})
+
+			if (!response.ok) {
+				throw new Error('Token validation failed')
+			}
+
+			const data = await response.json()
+			return data.valid
+		} catch (error) {
+			console.error('Token validation error:', error)
+			return false
+		}
+	}
+
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 		setIsSubmitting(true)
@@ -37,6 +59,16 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 		if (!token) {
 			setError('Please complete the CAPTCHA verification')
 			setIsSubmitting(false)
+			return
+		}
+
+		// Immediately validate the token
+		const isValid = await validateToken(token)
+		if (!isValid) {
+			setError('CAPTCHA verification failed. Please try again.')
+			setIsSubmitting(false)
+			turnstileRef.current?.reset()
+			setToken(null)
 			return
 		}
 
@@ -166,7 +198,7 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 								options={{
 									theme: 'light',
 									size: 'normal',
-									appearance: 'interaction-only',
+									appearance: 'execute',
 									retry: 'auto',
 									retryInterval: 5000,
 									responseField: false,
