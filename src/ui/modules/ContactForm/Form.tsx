@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { Turnstile } from '@marsidev/react-turnstile'
+import { useState, useRef } from 'react'
+import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile'
 
 interface FormProps {
 	emailTo: string
@@ -20,6 +20,7 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 	const [isSuccess, setIsSuccess] = useState(false)
 	const [error, setError] = useState('')
 	const [token, setToken] = useState<string | null>(null)
+	const turnstileRef = useRef<TurnstileInstance | null>(null)
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
@@ -151,6 +152,7 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 			<div className="justify-items-center space-y-4 py-4">
 				<div className="flex justify-center">
 					<Turnstile
+						ref={turnstileRef}
 						siteKey={process.env.NEXT_PUBLIC_CF_TURNSTILE_SITE_KEY || ''}
 						options={{
 							theme: 'light',
@@ -165,10 +167,12 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 							console.error('Turnstile error:', error)
 							setError('CAPTCHA verification failed. Please try again.')
 							setToken(null)
+							turnstileRef.current?.reset()
 						}}
 						onExpire={() => {
 							console.log('Turnstile token expired')
 							setToken(null)
+							turnstileRef.current?.reset()
 						}}
 					/>
 				</div>
