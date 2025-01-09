@@ -166,7 +166,7 @@ export default function Form({ emailTo, successMessage, fields }: FormProps) {
 								options={{
 									theme: 'light',
 									size: 'normal',
-									appearance: 'interaction-only',
+									appearance: 'always',
 									retry: 'auto',
 									retryInterval: 5000,
 									responseField: false,
