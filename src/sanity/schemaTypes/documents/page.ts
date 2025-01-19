@@ -51,6 +51,7 @@ export default defineType({
 				{ type: 'testimonial-list' },
 				{ type: 'testimonial.featured' },
 				{ type: 'contactForm' },
+				{ type: 'timeline' },
 			],
 			options: {
 				insertMenu: {

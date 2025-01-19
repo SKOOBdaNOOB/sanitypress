@@ -22,6 +22,7 @@ import TabbedContent from './TabbedContent'
 import TestimonialList from './TestimonialList'
 import TestimonialFeatured from './TestimonialFeatured'
 import ContactForm from './ContactForm'
+import Timeline from './Timeline'
 
 export default function Modules({
 	modules,
@@ -104,6 +105,13 @@ export default function Modules({
 								key={module._key}
 							/>
 						)
+					case 'timeline':
+						return (
+							<Timeline
+								{...(module as Sanity.TimelineModule)}
+								key={module._key}
+							/>
+						)
 					default:
 						return <div data-type={module._type} key={module._key} />
 				}
@@ -111,3 +119,29 @@ export default function Modules({
 		</>
 	)
 }
+
+export { default as AccordionList } from './AccordionList'
+export { default as BlogFrontpage } from './blog/BlogFrontpage'
+export { default as BlogList } from './blog/BlogList'
+export { default as BlogPostContent } from './blog/PostContent'
+export { default as Breadcrumbs } from './Breadcrumbs'
+export { default as Callout } from './Callout'
+export { default as CardList } from './CardList'
+export { default as CreativeModule } from './CreativeModule'
+export { default as CustomHTML } from './CustomHTML'
+export { default as FlagList } from './FlagList'
+export { default as Hero } from './Hero'
+export { default as HeroSplit } from './HeroSplit'
+export { default as HeroSaaS } from './HeroSaaS'
+export { default as LogoList } from './LogoList'
+export { default as PricingList } from './PricingList'
+export { default as RichtextModule } from './RichtextModule'
+export { default as ScheduleModule } from './ScheduleModule'
+export { default as SearchModule } from './search'
+export { default as StatList } from './StatList'
+export { default as StepList } from './StepList'
+export { default as TabbedContent } from './TabbedContent'
+export { default as TestimonialList } from './TestimonialList'
+export { default as TestimonialFeatured } from './TestimonialFeatured'
+export { default as ContactForm } from './ContactForm'
+export { default as Timeline } from './Timeline'

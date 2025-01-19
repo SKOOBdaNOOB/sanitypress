@@ -164,6 +164,18 @@ declare global {
 				submitLabel: string
 			}
 		}
+
+		interface TimelineItem {
+			date: string
+			title: string
+			description?: any[]
+			image?: Image
+		}
+
+		interface TimelineModule extends Module<'timeline'> {
+			title?: string
+			items: TimelineItem[]
+		}
 	}
 }
 
