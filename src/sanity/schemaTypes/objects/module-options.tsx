@@ -62,5 +62,57 @@ export default defineType({
 				},
 			},
 		}),
+		defineField({
+			name: 'containerWidth',
+			title: 'Container Width',
+			type: 'string',
+			options: {
+				list: [
+					{ title: 'Default', value: 'default' },
+					{ title: 'Wide', value: 'wide' },
+					{ title: 'Narrow', value: 'narrow' },
+				],
+				layout: 'radio',
+			},
+			initialValue: 'default',
+			description: 'Control the maximum width of the timeline container',
+		}),
+		defineField({
+			name: 'textAlignment',
+			title: 'Text Alignment',
+			type: 'string',
+			options: {
+				list: [
+					{ title: 'Left', value: 'left' },
+					{ title: 'Center', value: 'center' },
+					{ title: 'Right', value: 'right' },
+				],
+				layout: 'radio',
+			},
+			initialValue: 'left',
+			description: 'Set the text alignment for timeline items',
+		}),
+		defineField({
+			name: 'showDates',
+			title: 'Show Dates',
+			type: 'boolean',
+			initialValue: true,
+			description: 'Toggle visibility of dates in the timeline',
+		}),
+		defineField({
+			name: 'imageSize',
+			title: 'Image Size',
+			type: 'string',
+			options: {
+				list: [
+					{ title: 'Small', value: 'small' },
+					{ title: 'Medium', value: 'medium' },
+					{ title: 'Large', value: 'large' },
+				],
+				layout: 'radio',
+			},
+			initialValue: 'medium',
+			description: 'Control the maximum size of timeline images',
+		}),
 	],
 })
