@@ -88,7 +88,7 @@ export default function Timeline({
 		>
 			{/* Module title using ink colors for light/dark modes */}
 			{title && (
-				<h2 className="mb-8 text-3xl font-bold text-ink dark:text-ink-dark">
+				<h2 className="text-gradient mb-8 text-3xl font-bold text-ink dark:text-ink-dark">
 					{title}
 				</h2>
 			)}
@@ -126,12 +126,12 @@ export default function Timeline({
 					<div
 						key={index}
 						className={cn(
-							'timeline-item relative pl-8 md:pl-0',
+							'timeline-item relative md:pl-0',
 							index !== items.length - 1 ? 'mb-12' : '',
 						)}
 						data-index={index}
 						style={{
-							marginTop: index === 0 ? '0' : '2rem',
+							marginTop: index === 0 ? '0' : '0.5rem',
 						}}
 					>
 						<div
@@ -174,7 +174,7 @@ export default function Timeline({
 								{/* Content card with animation */}
 								<div
 									className={cn(
-										'transform rounded-lg bg-canvas p-6 shadow transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] dark:bg-canvas-dark dark:shadow-lg',
+										'transform rounded-lg bg-canvas/30 p-6 pl-8 shadow transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] dark:bg-canvas-dark dark:shadow-lg',
 										visibleItems.includes(index)
 											? 'translate-y-0 opacity-100'
 											: 'translate-y-8 opacity-0',
