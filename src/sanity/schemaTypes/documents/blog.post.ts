@@ -10,7 +10,7 @@ export default defineType({
 	groups: [
 		{ name: 'content', default: true },
 		{ name: 'options' },
-		{ name: 'seo', title: 'SEO' },
+		{ name: 'metadata' },
 	],
 	fields: [
 		defineField({
@@ -73,7 +73,13 @@ export default defineType({
 		defineField({
 			name: 'metadata',
 			type: 'metadata',
-			group: 'seo',
+			group: 'metadata',
+		}),
+		defineField({
+			name: 'language',
+			type: 'string',
+			readOnly: true,
+			hidden: true,
 		}),
 	],
 	preview: {
@@ -81,12 +87,15 @@ export default defineType({
 			featured: 'featured',
 			title: 'metadata.title',
 			publishDate: 'publishDate',
-			media: 'metadata.image',
+			language: 'language',
+			image: 'metadata.image',
 		},
-		prepare: ({ title, publishDate, media, featured }) => ({
+		prepare: ({ featured, title, publishDate, image, language }) => ({
 			title: [featured && '★', title].filter(Boolean).join(' '),
-			subtitle: publishDate,
-			media,
+			subtitle: [language && `[${language}] `, publishDate]
+				.filter(Boolean)
+				.join(''),
+			media: image,
 		}),
 	},
 	orderings: [

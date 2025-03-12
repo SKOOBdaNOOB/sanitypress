@@ -1,11 +1,7 @@
 import { fetchSanityLive } from './fetch'
 import { groq } from 'next-sanity'
 import errors from '@/lib/errors'
-
-export const SLUG_QUERY = groq`
-	array::join([...parent[]->metadata.slug.current, metadata.slug.current], '/')
-`
-
+import { BLOG_DIR } from '@/lib/env'
 export const LINK_QUERY = groq`
 	...,
 	internal->{
@@ -29,25 +25,6 @@ export const CTA_QUERY = groq`
 	...,
 	link{ ${LINK_QUERY} }
 `
-
-export async function getSite() {
-	const site = await fetchSanityLive<Sanity.Site>({
-		query: groq`
-			*[_type == 'site'][0]{
-				...,
-				ctas[]{ ${CTA_QUERY} },
-				headerMenu->{ ${NAVIGATION_QUERY} },
-				footerMenu->{ ${NAVIGATION_QUERY} },
-				social->{ ${NAVIGATION_QUERY} },
-				'ogimage': ogimage.asset->url
-			}
-		`,
-	})
-
-	if (!site) throw new Error(errors.missingSiteSettings)
-
-	return site
-}
 
 export const REPUTATION_QUERY = groq`
 	_type == 'reputation-block' => { reputation-> }
@@ -126,10 +103,59 @@ export const MODULES_QUERY = groq`
 	_type == 'testimonial-list' => { testimonials[]-> },
 `
 
-export const GLOBAL_MODULE_QUERY = groq`
+export const GLOBAL_MODULE_PATH_QUERY = groq`
 	string::startsWith($slug, path)
 	&& select(
 		defined(excludePaths) => count(excludePaths[string::startsWith($slug, @)]) == 0,
 		true
 	)
 `
+
+export const TRANSLATIONS_QUERY = groq`
+	'translations': *[_type == 'translation.metadata' && references(^._id)].translations[].value->{
+		'slug': metadata.slug.current,
+		language
+	}
+`
+
+export async function getSite() {
+	const site = await fetchSanityLive<Sanity.Site>({
+		query: groq`
+			*[_type == 'site'][0]{
+				...,
+				ctas[]{ ${CTA_QUERY} },
+				headerMenu->{ ${NAVIGATION_QUERY} },
+				footerMenu->{ ${NAVIGATION_QUERY} },
+				social->{ ${NAVIGATION_QUERY} },
+				'ogimage': ogimage.asset->url
+			}
+		`,
+	})
+
+	if (!site) throw new Error(errors.missingSiteSettings)
+
+	return site
+}
+
+export async function getTranslations() {
+	return await fetchSanityLive<Sanity.Translation[]>({
+		query: groq`*[_type in ['page', 'blog.post'] && defined(language)]{
+			'slug': '/' + select(
+				_type == 'blog.post' => '${BLOG_DIR}/' + metadata.slug.current,
+				metadata.slug.current != 'index' => metadata.slug.current,
+				''
+			),
+			'translations': *[_type == 'translation.metadata' && references(^._id)].translations[].value->{
+				'slug': '/' + select(
+					_type == 'blog.post' => '${BLOG_DIR}/' + language + '/' + metadata.slug.current,
+					metadata.slug.current != 'index' => language + '/' + metadata.slug.current,
+					language
+				),
+				_type == 'blog.post' => {
+					'slugBlogAlt': '/' + language + '/${BLOG_DIR}/' + metadata.slug.current
+				},
+				language
+			}
+		}`,
+	})
+}

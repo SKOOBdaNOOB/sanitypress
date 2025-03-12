@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity'
 import { VscEdit } from 'react-icons/vsc'
-import { getBlockText } from '@/sanity/lib/utils'
+import { getBlockText } from 'sanitypress-utils'
 
 export default defineType({
 	name: 'blog-list',
@@ -13,6 +13,11 @@ export default defineType({
 		{ name: 'options' },
 	],
 	fields: [
+		defineField({
+			name: 'options',
+			type: 'module-options',
+			group: 'options',
+		}),
 		defineField({
 			name: 'pretitle',
 			type: 'string',

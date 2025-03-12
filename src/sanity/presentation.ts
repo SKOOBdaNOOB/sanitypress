@@ -2,6 +2,7 @@
 
 import { defineLocations, presentationTool } from 'sanity/presentation'
 import { groq } from 'next-sanity'
+import { BLOG_DIR } from '@/lib/env'
 
 export const presentation = presentationTool({
 	name: 'editor',
@@ -25,7 +26,7 @@ export const presentation = presentationTool({
 				`,
 			},
 			{
-				route: '/blog/:slug',
+				route: `/${BLOG_DIR}/:slug`,
 				filter: groq`_type == 'blog.post' && metadata.slug.current == $slug`,
 			},
 		],
@@ -42,9 +43,6 @@ export const presentation = presentationTool({
 			page: defineLocations({
 				select: {
 					title: 'title',
-					parent1: 'parent.0.metadata.slug.current',
-					parent2: 'parent.1.metadata.slug.current',
-					parent3: 'parent.2.metadata.slug.current',
 					metaTitle: 'metadata.title',
 					slug: 'metadata.slug.current',
 				},
@@ -52,13 +50,11 @@ export const presentation = presentationTool({
 					locations: [
 						{
 							title: doc?.title || doc?.metaTitle || 'Untitled',
-							href: [
-								doc?.parent1 &&
-									`/${[doc.parent1, doc.parent2, doc.parent3].filter(Boolean).join('/')}`,
-								doc?.slug ? (doc.slug === 'index' ? '/' : `/${doc.slug}`) : '/',
-							]
-								.filter(Boolean)
-								.join(''),
+							href: doc?.slug
+								? doc.slug === 'index'
+									? '/'
+									: `/${doc.slug}`
+								: '/',
 						},
 					],
 				}),
@@ -72,7 +68,7 @@ export const presentation = presentationTool({
 					locations: [
 						{
 							title: doc?.title || 'Untitled',
-							href: doc?.slug ? `/blog/${doc.slug}` : '/blog',
+							href: doc?.slug ? `/${BLOG_DIR}/${doc.slug}` : `/${BLOG_DIR}`,
 						},
 					],
 				}),
@@ -86,7 +82,9 @@ export const presentation = presentationTool({
 					locations: [
 						{
 							title: doc?.title || 'Untitled',
-							href: doc?.slug ? `/blog?category=${doc.slug}` : '/blog',
+							href: doc?.slug
+								? `/${BLOG_DIR}?category=${doc.slug}`
+								: `/${BLOG_DIR}`,
 						},
 					],
 				}),

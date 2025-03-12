@@ -1,9 +1,12 @@
-import { Suspense } from 'react'
+import { cookies } from 'next/headers'
+import { DEFAULT_LANG } from '@/lib/i18n'
 import { fetchSanityLive } from '@/sanity/lib/fetch'
 import { groq } from 'next-sanity'
+import moduleProps from '@/lib/moduleProps'
 import Pretitle from '@/ui/Pretitle'
 import { PortableText, stegaClean } from 'next-sanity'
 import FilterList from '@/ui/modules/blog/BlogList/FilterList'
+import { Suspense } from 'react'
 import PostPreview from '../PostPreview'
 import List from './List'
 import { cn } from '@/lib/utils'
@@ -16,6 +19,7 @@ export default async function BlogList({
 	showFeaturedPostsFirst,
 	displayFilters,
 	filteredCategory,
+	...props
 }: Partial<{
 	pretitle: string
 	intro: any
@@ -24,11 +28,15 @@ export default async function BlogList({
 	showFeaturedPostsFirst: boolean
 	displayFilters: boolean
 	filteredCategory: Sanity.BlogCategory
-}>) {
+}> &
+	Sanity.Module) {
+	const lang = (await cookies()).get('lang')?.value ?? DEFAULT_LANG
+
 	const posts = await fetchSanityLive<Sanity.BlogPost[]>({
 		query: groq`
 			*[
 				_type == 'blog.post'
+				${!!lang ? `&& select(defined(language) => language == '${lang}', true)` : ''}
 				${!!filteredCategory ? `&& $filteredCategory in categories[]->._id` : ''}
 			]|order(
 				${showFeaturedPostsFirst ? 'featured desc, ' : ''}
@@ -55,7 +63,7 @@ export default async function BlogList({
 	)
 
 	return (
-		<section className="section space-y-8">
+		<section className="section space-y-8" {...moduleProps(props)}>
 			{intro && (
 				<header className="richtext">
 					<Pretitle>{pretitle}</Pretitle>

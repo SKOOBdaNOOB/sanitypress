@@ -1,6 +1,7 @@
 import { getSite } from '@/sanity/lib/queries'
 import Navigation from './Navigation'
 import Social from '@/ui/Social'
+import LanguageSwitcher from '@/ui/LanguageSwitcher'
 import { PortableText } from 'next-sanity'
 import Link from 'next/link'
 import { Img } from '@/ui/Img'
@@ -13,7 +14,7 @@ export default async function Footer() {
 	return (
 		<footer className="bg-ink text-canvas" role="contentinfo">
 			<div className="section flex flex-wrap justify-between gap-x-12 gap-y-8 max-sm:flex-col">
-				<div className="flex flex-col gap-3 self-start">
+				<div className="flex flex-col gap-3 self-stretch">
 					<Link className="h3 md:h2 max-w-max" href="/">
 						{logoImage ? (
 							<Img
@@ -32,7 +33,9 @@ export default async function Footer() {
 						</div>
 					)}
 
-					<Social />
+					<Social className="mb-auto -ml-2" />
+
+					<LanguageSwitcher className="mt-4 max-w-max" />
 				</div>
 
 				<Navigation />

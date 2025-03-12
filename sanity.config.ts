@@ -5,7 +5,7 @@ import { defineConfig } from 'sanity'
 import { projectId, dataset, apiVersion } from '@/sanity/lib/env'
 import { structure } from './src/sanity/structure'
 import { presentation } from './src/sanity/presentation'
-import { sanitypress, icon, infoWidget } from 'sanity-plugin-sanitypress'
+import { sanitypress, icon, infoWidget } from 'sanitypress-utils'
 import {
 	dashboardTool,
 	projectInfoWidget,
@@ -14,6 +14,8 @@ import {
 import { vercelWidget } from 'sanity-plugin-dashboard-widget-vercel'
 import { visionTool } from '@sanity/vision'
 import { codeInput } from '@sanity/code-input'
+import { DEFAULT_LANG, supportedLanguages } from '@/lib/i18n'
+import { documentInternationalization } from '@sanity/document-internationalization'
 import { schemaTypes } from './src/sanity/schemaTypes'
 import resolveUrl from '@/lib/resolveUrl'
 
@@ -28,7 +30,9 @@ export default defineConfig({
 		structure,
 		presentation,
 		sanitypress({
+			licenseKey: process.env.NEXT_PUBLIC_SANITYPRESS_PRO_LICENSE_KEY!,
 			singletonTypes: ['site'],
+			// defaultLang: DEFAULT_LANG,
 		}),
 		dashboardTool({
 			name: 'deployment',
@@ -46,6 +50,10 @@ export default defineConfig({
 		}),
 		visionTool({ defaultApiVersion: apiVersion }),
 		codeInput(),
+		documentInternationalization({
+			supportedLanguages,
+			schemaTypes: ['page', 'blog.post'],
+		}),
 	],
 
 	schema: {
@@ -56,7 +64,6 @@ export default defineConfig({
 			if (['page', 'blog.post'].includes(document?._type)) {
 				return resolveUrl(document as Sanity.PageBase, { base: true })
 			}
-
 			return prev
 		},
 	},

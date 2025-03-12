@@ -1,9 +1,11 @@
 import { fetchSanityLive } from '@/sanity/lib/fetch'
 import { groq } from 'next-sanity'
+import { BLOG_DIR } from '@/lib/env'
 import resolveUrl from '@/lib/resolveUrl'
 import { Feed } from 'feed'
 import { escapeHTML, toHTML } from '@portabletext/to-html'
 import { urlFor } from '@/sanity/lib/image'
+import { DEFAULT_LANG } from '@/lib/i18n'
 
 export async function GET() {
 	const { blog, posts, copyright } = await fetchSanityLive<{
@@ -12,11 +14,11 @@ export async function GET() {
 		copyright: string
 	}>({
 		query: groq`{
-			'blog': *[_type == 'page' && metadata.slug.current == 'blog'][0]{
+			'blog': *[_type == 'page' && metadata.slug.current == '${BLOG_DIR}'][0]{
 				_type,
 				title,
 				metadata,
-				'image': metadata.image.asset->url
+				'image': metadata.image.asset->url,
 			},
 			'posts': *[_type == 'blog.post']{
 				_type,
@@ -24,7 +26,8 @@ export async function GET() {
 				publishDate,
 				authors[]->,
 				metadata,
-				'image': metadata.image.asset->url
+				'image': metadata.image.asset->url,
+				language,
 			},
 			'copyright': pt::text(*[_type == 'site'][0].copyright)
 		}`,
@@ -46,16 +49,18 @@ export async function GET() {
 		id: url,
 		copyright,
 		favicon: process.env.NEXT_PUBLIC_BASE_URL + '/favicon.ico',
-		language: 'en',
+		language: DEFAULT_LANG,
 		generator: 'https://sanitypress.dev',
 	})
 
-	posts.map((post) =>
-		feed.addItem({
+	posts.map((post) => {
+		const url = resolveUrl(post, { language: post.language })
+
+		return feed.addItem({
 			title: escapeHTML(post.metadata.title),
 			description: post.metadata.description,
-			id: resolveUrl(post),
-			link: resolveUrl(post),
+			id: url,
+			link: url,
 			published: new Date(post.publishDate),
 			date: new Date(post.publishDate),
 			author: post.authors?.map((author) => ({ name: author.name })),
@@ -76,8 +81,8 @@ export async function GET() {
 				},
 			}),
 			image: post.image,
-		}),
-	)
+		})
+	})
 
 	return new Response(feed.atom1(), {
 		headers: {
