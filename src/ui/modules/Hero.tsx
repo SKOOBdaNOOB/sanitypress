@@ -33,10 +33,10 @@ export default function Hero({
 	return (
 		<section
 			className={cn(
-				'relative min-h-fold grid-pattern scan-lines',
+				'min-h-fold grid-pattern scan-lines relative',
 				hasImage &&
 					'bg-ink text-canvas grid overflow-hidden *:col-span-full *:row-span-full',
-				!hasImage && 'bg-canvas'
+				!hasImage && 'bg-canvas',
 			)}
 			{...moduleProps(props)}
 		>
@@ -50,7 +50,7 @@ export default function Hero({
 			)}
 
 			{content && (
-				<div className="section flex w-full flex-col text-balance relative z-10">
+				<div className="section relative z-10 flex w-full flex-col text-balance">
 					<div
 						className={cn(
 							'richtext headings:text-balance relative isolate max-w-4xl',
@@ -66,10 +66,12 @@ export default function Hero({
 						)}
 						style={{ textAlign }}
 					>
-						<Pretitle className={cn(
-							'technical mb-4',
-							hasImage ? 'text-canvas/70' : 'text-accent-primary'
-						)}>
+						<Pretitle
+							className={cn(
+								'technical mb-4',
+								hasImage ? 'text-canvas/70' : 'text-accent-primary',
+							)}
+						>
 							{pretitle}
 						</Pretitle>
 
@@ -79,7 +81,7 @@ export default function Hero({
 								components={{
 									block: {
 										normal: ({ children }) => (
-											<p className="text-lg md:text-xl leading-relaxed text-ink-muted">
+											<p className="text-ink-muted text-lg leading-relaxed md:text-xl">
 												{children}
 											</p>
 										),
@@ -89,9 +91,7 @@ export default function Hero({
 											</h1>
 										),
 										h2: ({ children }) => (
-											<h2 className="h2 text-gradient">
-												{children}
-											</h2>
+											<h2 className="h2 text-gradient">{children}</h2>
 										),
 									},
 									marks: {
@@ -101,9 +101,7 @@ export default function Hero({
 											</strong>
 										),
 										code: ({ children }) => (
-											<code className="code-text">
-												{children}
-											</code>
+											<code className="code-text">{children}</code>
 										),
 									},
 									types: {
@@ -142,13 +140,7 @@ export default function Hero({
 			)}
 
 			{/* Terminal-style status indicator */}
-			{!hasImage && (
-				<div className="absolute bottom-4 left-4">
-					<div className="status-indicator">
-						<span className="terminal-text text-sm">System Online</span>
-					</div>
-				</div>
-			)}
+			{!hasImage && <div className="absolute bottom-4 left-4"></div>}
 		</section>
 	)
 }

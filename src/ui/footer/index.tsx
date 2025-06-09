@@ -35,7 +35,7 @@ export default async function Footer() {
 						<div className="flex items-center gap-2">
 							<div className="h-2 w-2 animate-pulse rounded-full bg-green-400"></div>
 							<span className="font-mono text-xs text-green-400">
-								SYSTEMS ONLINE
+								SYSTEM ONLINE
 							</span>
 						</div>
 					</div>
