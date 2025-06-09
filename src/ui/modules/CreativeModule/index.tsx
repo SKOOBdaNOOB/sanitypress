@@ -42,18 +42,40 @@ export default function CreativeModule({
 	const alignItems = stegaClean(ai)
 
 	return (
-		<section {...moduleProps(props)}>
-			<div className="section space-y-8">
+		<section {...moduleProps(props)} className="grid-pattern">
+			<div className="section space-y-12">
+				{/* Technical Header */}
 				{intro && (
-					<header className="richtext mx-auto max-w-xl text-center text-balance">
-						<PortableText value={intro} />
+					<header className="relative text-center">
+						{/* Scan Lines Effect */}
+						<div className="scan-lines pointer-events-none absolute inset-0"></div>
+
+						{/* Module Status */}
+						<div className="mb-6 flex items-center justify-center gap-2">
+							<div className="status-indicator">
+								<span className="technical">CREATIVE MODULE</span>
+							</div>
+						</div>
+
+						{/* Enhanced Intro Content */}
+						<div className="richtext relative z-10 mx-auto max-w-xl text-balance">
+							<PortableText value={intro} />
+						</div>
+
+						{/* Terminal-style Separator */}
+						<div className="mt-8 flex items-center justify-center gap-4">
+							<div className="bg-accent-primary h-px max-w-20 flex-1"></div>
+							<div className="terminal-text text-xs">●●●</div>
+							<div className="bg-accent-primary h-px max-w-20 flex-1"></div>
+						</div>
 					</header>
 				)}
 
+				{/* Enhanced Grid Layout */}
 				<div
 					className={cn(
 						'grid items-center md:grid-cols-[repeat(var(--col,1),minmax(0px,1fr))]',
-						visualSeparation ? 'gap-4' : 'gap-x-12 gap-y-8',
+						visualSeparation ? 'gap-6' : 'gap-x-12 gap-y-10',
 					)}
 					style={
 						{
@@ -65,9 +87,9 @@ export default function CreativeModule({
 				>
 					{modules?.map(({ subModules, colSpan = 1 }, i) => (
 						<article
-							className={cn('space-y-4', {
+							className={cn('group space-y-6', {
 								'md:col-(--col-span,1)': colSpan > 1,
-								'bg-accent/3 rounded p-6': visualSeparation,
+								'terminal-window': visualSeparation,
 								'flex flex-col justify-center': alignItems === 'stretch',
 							})}
 							style={
@@ -77,50 +99,100 @@ export default function CreativeModule({
 							}
 							key={i}
 						>
-							{subModules?.map((subModule, ii) => {
-								switch (subModule._type) {
-									case 'image':
-										return (
-											<ImageSubModule
-												module={subModule}
-												width={width * colSpan}
-												key={ii}
-											/>
-										)
+							{/* Terminal Content Wrapper for Visual Separation */}
+							<div
+								className={cn(
+									visualSeparation && 'terminal-content',
+									!visualSeparation && 'space-y-6',
+								)}
+							>
+								{/* Module Index Indicator */}
+								{visualSeparation && (
+									<div className="mb-4 flex items-center gap-2">
+										<span className="technical text-accent-code">
+											MODULE {String(i + 1).padStart(2, '0')}
+										</span>
+										<div className="bg-accent-code h-px flex-1"></div>
+									</div>
+								)}
 
-									case 'icon':
-										return (
-											<figure
-												className={cn(
-													textAlign === 'center' && '[&_img]:mx-auto',
-												)}
-												style={{ height: getPixels(subModule?.size) }}
-											>
-												<Icon icon={subModule} key={ii} />
-											</figure>
-										)
+								{subModules?.map((subModule, ii) => {
+									switch (subModule._type) {
+										case 'image':
+											return (
+												<div className="group/image relative" key={ii}>
+													<ImageSubModule
+														module={subModule}
+														width={width * colSpan}
+													/>
+													{/* Image overlay effect */}
+													<div className="bg-accent-primary/5 pointer-events-none absolute inset-0 rounded opacity-0 transition-opacity group-hover/image:opacity-100"></div>
+												</div>
+											)
 
-									case 'richtext':
-										return <RichtextSubModule module={subModule} key={ii} />
+										case 'icon':
+											return (
+												<figure
+													className={cn(
+														'relative',
+														textAlign === 'center' && '[&_img]:mx-auto',
+													)}
+													style={{ height: getPixels(subModule?.size) }}
+													key={ii}
+												>
+													{/* Icon background glow */}
+													<div className="bg-accent-primary/10 absolute inset-0 rounded-full opacity-50 blur-xl"></div>
+													<Icon icon={subModule} />
+												</figure>
+											)
 
-									case 'ctas':
-										return (
-											<CTAsSubModule
-												module={subModule}
-												className={cn(
-													textAlign === 'center' && 'justify-center',
-												)}
-												key={ii}
-											/>
-										)
+										case 'richtext':
+											return (
+												<div className="relative" key={ii}>
+													<RichtextSubModule module={subModule} />
+												</div>
+											)
 
-									case 'custom-html':
-										return <CustomHTMLSubmodule module={subModule} />
+										case 'ctas':
+											return (
+												<div className="relative" key={ii}>
+													<CTAsSubModule
+														module={subModule}
+														className={cn(
+															textAlign === 'center' && 'justify-center',
+														)}
+													/>
+												</div>
+											)
 
-									default:
-										return null
-								}
-							})}
+										case 'custom-html':
+											return (
+												<div className="relative" key={ii}>
+													<CustomHTMLSubmodule module={subModule} />
+												</div>
+											)
+
+										default:
+											return null
+									}
+								})}
+
+								{/* Module Status Footer for Visual Separation */}
+								{visualSeparation && (
+									<div className="border-terminal-border mt-6 border-t pt-4">
+										<div className="flex items-center justify-between">
+											<div className="status-indicator offline">
+												<span className="terminal-text text-xs">
+													MODULE COMPLETE
+												</span>
+											</div>
+											<div className="terminal-text text-xs opacity-50">
+												{subModules?.length || 0} COMPONENTS
+											</div>
+										</div>
+									</div>
+								)}
+							</div>
 						</article>
 					))}
 				</div>

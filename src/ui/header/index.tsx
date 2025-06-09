@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { Img } from '@/ui/Img'
 import Navigation from './Navigation'
 import CTAList from '@/ui/CTAList'
-import Toggle from './Toggle'
 import { cn } from '@/lib/utils'
 import css from './Header.module.css'
 
@@ -14,7 +13,7 @@ export default async function Header() {
 	const logoImage = logo?.image?.dark || logo?.image?.default
 
 	return (
-		<Wrapper className="frosted-glass border-ink/10 bg-canvas max-md:header-open:shadow-lg sticky top-0 z-10 border-b">
+		<Wrapper className="bg-canvas/95 border-ink/10 max-md:header-open:shadow-lg sticky top-0 z-20 border-b backdrop-blur-md">
 			<div
 				className={cn(
 					css.header,
@@ -44,8 +43,6 @@ export default async function Header() {
 					ctas={ctas}
 					className="max-md:header-closed:hidden [grid-area:ctas] max-md:*:w-full md:ms-auto"
 				/>
-
-				<Toggle />
 			</div>
 		</Wrapper>
 	)

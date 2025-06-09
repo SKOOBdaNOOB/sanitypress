@@ -7,7 +7,7 @@ import type { ComponentProps } from 'react'
 
 export default async function Code({
 	value,
-	theme = 'dark-plus',
+	theme = 'github-dark',
 	className,
 }: {
 	theme?: keyof typeof bundledThemes
@@ -37,35 +37,54 @@ export default async function Code({
 
 	return (
 		<article
-			className={cn('group bg-ink/5 relative rounded', className)}
+			className={cn('group relative overflow-hidden', className)}
 			data-module="code"
 		>
-			{value.filename && (
-				<div className="text-canvas sticky top-0 z-1 -mb-1 rounded-t bg-[#323232] p-1 pb-0 font-mono text-xs">
-					<span className="inline-block rounded-t border-b border-blue-400 bg-[#1E1E1E] px-3 py-2">
-						{path && <span className="text-canvas/50">{path}/</span>}
-						<span>{filename}</span>
-					</span>
+			{/* Simplified Code Block Header */}
+			{(value.filename || value.language) && (
+				<div className="flex items-center justify-between border-b border-[var(--color-terminal-border)] bg-[var(--color-surface-elevated)] px-4 py-2 text-sm">
+					{/* File Path */}
+					{value.filename && (
+						<div className="flex items-center gap-1 font-mono">
+							<span className="text-ink-subtle">~/</span>
+							{path && <span className="text-ink-subtle">{path}/</span>}
+							<span className="text-accent-code font-semibold">{filename}</span>
+						</div>
+					)}
+
+					{/* Language Badge */}
+					{value.language && (
+						<div className="text-accent-code rounded border border-[var(--color-terminal-border)] bg-[var(--color-terminal-bg)] px-2 py-1 font-mono text-xs">
+							{value.language}
+						</div>
+					)}
 				</div>
 			)}
 
-			<div className="inner relative">
-				<div className="sticky top-1 z-1">
-					<menu className="absolute top-0 right-0 flex items-center justify-end">
-						<li>
-							<ClickToCopy
-								value={stegaClean(value.code)}
-								className={cn(
-									'anim-fade-to-l m-1 hidden rounded p-[.3em] text-lg backdrop-blur group-hover:block hover:bg-white/10 active:scale-95 active:bg-white/20 [&.pointer-events-none]:block',
-									!theme.includes('light') && 'text-white',
-								)}
-							/>
-						</li>
-					</menu>
+			{/* Code Content Area */}
+			<div className="relative">
+				{/* Copy Button */}
+				<div className="absolute top-3 right-3 z-20">
+					<ClickToCopy
+						value={stegaClean(value.code)}
+						className={cn(
+							'action-outline px-3 py-1.5 text-xs',
+							'opacity-0 transition-all duration-200 group-hover:opacity-100',
+							'hover:bg-accent-primary hover:text-canvas hover:border-accent-primary',
+							'shadow-lg backdrop-blur-sm',
+							'[&.pointer-events-none]:opacity-100',
+						)}
+					/>
 				</div>
 
+				{/* Code Content */}
 				<div
-					className={cn(css.code, '[--highlight-color:var(--color-green-400)]')}
+					className={cn(
+						css.code,
+						'font-mono text-sm leading-relaxed',
+						'[--highlight-color:var(--color-accent-success)]',
+						'relative z-10',
+					)}
 					dangerouslySetInnerHTML={{ __html: html }}
 				/>
 			</div>

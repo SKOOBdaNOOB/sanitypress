@@ -2,11 +2,41 @@
 @import './fonts.css';
 
 @theme {
-	--color-canvas: #fff;
-	--color-ink: #000;
-	--color-accent: #000;
+	/* Dark Theme Base Colors */
+	--color-canvas: #0a0a0a;
+	--color-surface: #1a1a1a;
+	--color-surface-elevated: #222222;
+	--color-ink: #ffffff;
+	--color-ink-muted: #a3a3a3;
+	--color-ink-subtle: #737373;
 
+	/* Multi-Accent System */
+	--color-accent: #00d4ff; /* Primary - Cyber Blue */
+	--color-accent-primary: #00d4ff; /* Cyber Blue - Navigation, links, primary actions */
+	--color-accent-success: #00ff88; /* Matrix Green - Success states, completion */
+	--color-accent-warning: #ff6b35; /* Security Orange - Warnings, security content */
+	--color-accent-code: #8b5cf6; /* DevOps Purple - Code blocks, technical sections */
+
+	/* Accent Variations */
+	--color-accent-primary-hover: #00b8e6;
+	--color-accent-success-hover: #00e077;
+	--color-accent-warning-hover: #ff5722;
+	--color-accent-code-hover: #7c3aed;
+
+	/* Technical Grid Pattern */
+	--grid-pattern: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+	--grid-size: 20px;
+
+	/* Terminal Colors */
+	--color-terminal-bg: #0d1117;
+	--color-terminal-border: #30363d;
+	--color-terminal-text: #f0f6fc;
+	--color-terminal-prompt: #7c3aed;
+
+	/* Layout */
 	--max-height-fold: calc(100svh - var(--header-height));
+	--border-radius-terminal: 8px;
+	--border-radius-code: 6px;
 }
 
 @custom-variant hover (&:hover);
@@ -58,6 +88,13 @@
 		accent-color: var(--color-accent);
 		caret-color: var(--color-accent);
 		scroll-behavior: smooth;
+	}
+
+	body {
+		font-family: var(--font-primary);
+		background-color: var(--color-canvas);
+		color: var(--color-ink);
+		line-height: 1.6;
 	}
 
 	body:has(dialog[open]) {
@@ -137,40 +174,77 @@
 /* typography */
 
 @utility h-base {
-	font-weight: bold;
+	font-family: var(--font-primary);
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: -0.025em;
 }
 
 @utility h1 {
-	@apply h-base text-4xl;
+	@apply h-base text-4xl md:text-5xl;
 }
 @utility h2 {
-	@apply h-base text-3xl;
+	@apply h-base text-3xl md:text-4xl;
 }
 @utility h3 {
-	@apply h-base text-2xl;
+	@apply h-base text-2xl md:text-3xl;
 }
 @utility h4 {
-	@apply h-base text-xl;
+	@apply h-base text-xl md:text-2xl;
 }
 @utility h5 {
-	@apply h-base text-lg;
+	@apply h-base text-lg md:text-xl;
 }
 @utility h6 {
-	@apply h-base;
+	@apply h-base text-base md:text-lg;
 }
 
 @utility technical {
+	font-family: var(--font-primary);
 	text-transform: uppercase;
-	letter-spacing: 1px;
-	font-weight: bold;
+	letter-spacing: 0.1em;
+	font-weight: 600;
+	font-size: 0.75em;
+	color: var(--color-accent-primary);
+}
+
+@utility terminal-text {
+	font-family: var(--font-mono);
+	font-weight: 400;
+	letter-spacing: 0.025em;
+	color: var(--color-terminal-text);
+}
+
+@utility code-text {
+	font-family: var(--font-mono);
+	font-size: 0.875em;
+	font-weight: 400;
+	background-color: var(--color-surface);
+	padding: 0.125em 0.25em;
+	border-radius: var(--border-radius-code);
+	color: var(--color-accent-code);
 }
 
 @utility text-shadow {
-	text-shadow: 0 0 0.2em rgb(0 0 0 / 0.25);
+	text-shadow: 0 0 0.2em rgb(0 0 0 / 0.5);
 }
 
 @utility text-gradient {
-	@apply from-accent/3 to-accent bg-linear-to-br bg-clip-text text-transparent;
+	background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-code));
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-size: 200% 200%;
+	animation: gradient-shift 3s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+	0%, 100% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+}
+
+@utility text-glow {
+	text-shadow: 0 0 10px var(--color-accent-primary);
 }
 
 /* ctas, links */
@@ -179,30 +253,118 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	padding: 0.5em 1em;
+	padding: 0.75em 1.5em;
 	text-align: center;
 	text-shadow: none;
-	color: var(--color-ink);
+	font-family: var(--font-primary);
+	font-weight: 600;
+	font-size: 0.875em;
+	letter-spacing: 0.025em;
+	border-radius: var(--border-radius-code);
+	transition: all 0.2s ease-in-out;
+	position: relative;
+	overflow: hidden;
 }
 
 @utility action {
-	@apply action-base bg-accent rounded border border-transparent text-balance text-white;
+	@apply action-base text-balance;
+	background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-code));
+	color: var(--color-canvas);
+	border: 1px solid transparent;
+
+	&:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+	}
+
+	&:active {
+		transform: translateY(0);
+	}
 }
 
 @utility action-outline {
-	@apply action-base border-accent/10 bg-canvas/50 rounded border text-balance;
+	@apply action-base text-balance;
+	background: var(--color-surface);
+	color: var(--color-accent-primary);
+	border: 1px solid var(--color-accent-primary);
+
+	&:hover {
+		background: var(--color-accent-primary);
+		color: var(--color-canvas);
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+	}
+}
+
+@utility action-success {
+	@apply action-base text-balance;
+	background: var(--color-accent-success);
+	color: var(--color-canvas);
+	border: 1px solid transparent;
+
+	&:hover {
+		background: var(--color-accent-success-hover);
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+	}
+}
+
+@utility action-warning {
+	@apply action-base text-balance;
+	background: var(--color-accent-warning);
+	color: var(--color-canvas);
+	border: 1px solid transparent;
+
+	&:hover {
+		background: var(--color-accent-warning-hover);
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+	}
 }
 
 @utility ghost {
-	@apply action-base frosted-glass hover:bg-accent/3 rounded;
+	@apply action-base frosted-glass;
+	background: rgba(255, 255, 255, 0.05);
+	color: var(--color-ink);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+
+	&:hover {
+		background: rgba(0, 212, 255, 0.1);
+		border-color: var(--color-accent-primary);
+		color: var(--color-accent-primary);
+	}
 }
 
 @utility link {
-	@apply underline hover:decoration-2;
+	color: var(--color-accent-primary);
+	text-decoration: underline;
+	text-decoration-color: transparent;
+	text-underline-offset: 0.2em;
+	transition: all 0.2s ease-in-out;
+
+	&:hover {
+		text-decoration-color: var(--color-accent-primary);
+		text-decoration-thickness: 2px;
+	}
 }
 
 @utility input {
-	@apply border-ink/10 rounded border p-[.25em] text-start;
+	background: var(--color-surface);
+	border: 1px solid var(--color-surface-elevated);
+	border-radius: var(--border-radius-code);
+	padding: 0.75em 1em;
+	color: var(--color-ink);
+	font-family: var(--font-primary);
+
+	&:focus {
+		outline: none;
+		border-color: var(--color-accent-primary);
+		box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+	}
+
+	&::placeholder {
+		color: var(--color-ink-subtle);
+	}
 }
 
 /* utilities */
@@ -250,6 +412,180 @@
 		black calc(100% - var(--offset)),
 		transparent
 	);
+}
+
+/* Technical Visual Elements */
+
+@utility grid-pattern {
+	background-image: var(--grid-pattern);
+	background-size: var(--grid-size) var(--grid-size);
+}
+
+@utility terminal-window {
+	background: var(--color-terminal-bg);
+	border: 1px solid var(--color-terminal-border);
+	border-radius: var(--border-radius-terminal);
+	position: relative;
+	overflow: hidden;
+
+	&::before {
+		content: '';
+		display: block;
+		height: 2rem;
+		background: var(--color-terminal-border);
+		border-bottom: 1px solid var(--color-terminal-border);
+		position: relative;
+	}
+
+	&::after {
+		content: '● ● ●';
+		position: absolute;
+		top: 0.5rem;
+		left: 0.75rem;
+		color: var(--color-ink-subtle);
+		font-size: 0.75rem;
+		line-height: 1;
+	}
+}
+
+@utility terminal-content {
+	padding: 1rem;
+	font-family: var(--font-mono);
+	color: var(--color-terminal-text);
+	font-size: 0.875rem;
+	line-height: 1.5;
+}
+
+@utility cursor-blink {
+	position: relative;
+
+	&::after {
+		content: '|';
+		color: var(--color-accent-primary);
+		animation: blink 1s infinite;
+		margin-left: 0.1em;
+	}
+}
+
+@keyframes blink {
+	0%, 50% { opacity: 1; }
+	51%, 100% { opacity: 0; }
+}
+
+@utility scan-lines {
+	position: relative;
+
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: repeating-linear-gradient(
+			0deg,
+			transparent,
+			transparent 2px,
+			rgba(255, 255, 255, 0.02) 2px,
+			rgba(255, 255, 255, 0.02) 4px
+		);
+		pointer-events: none;
+		z-index: 1;
+	}
+}
+
+@utility code-block {
+	background: var(--color-terminal-bg);
+	border: 1px solid var(--color-terminal-border);
+	border-radius: var(--border-radius-code);
+	padding: 1rem;
+	font-family: var(--font-mono);
+	font-size: 0.875rem;
+	line-height: 1.5;
+	overflow-x: auto;
+	position: relative;
+
+	&::before {
+		content: attr(data-language);
+		position: absolute;
+		top: 0.5rem;
+		right: 0.75rem;
+		font-size: 0.75rem;
+		color: var(--color-ink-subtle);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+}
+
+@utility status-indicator {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.875rem;
+
+	&::before {
+		content: '';
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 50%;
+		background: var(--color-accent-success);
+		animation: pulse 2s infinite;
+	}
+
+	&.warning::before {
+		background: var(--color-accent-warning);
+	}
+
+	&.error::before {
+		background: #ef4444;
+	}
+
+	&.offline::before {
+		background: var(--color-ink-subtle);
+		animation: none;
+	}
+}
+
+@keyframes pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.5; }
+}
+
+@utility progress-bar {
+	width: 100%;
+	height: 0.5rem;
+	background: var(--color-surface);
+	border-radius: 0.25rem;
+	overflow: hidden;
+	position: relative;
+
+	&::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: var(--progress, 0%);
+		background: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-code));
+		border-radius: 0.25rem;
+		transition: width 0.3s ease-in-out;
+	}
+}
+
+@utility breadcrumb-path {
+	font-family: var(--font-mono);
+	font-size: 0.875rem;
+	color: var(--color-ink-muted);
+
+	& .separator {
+		color: var(--color-accent-primary);
+		margin: 0 0.5rem;
+	}
+
+	& .current {
+		color: var(--color-ink);
+		font-weight: 600;
+	}
 }
 
 /* layout */
